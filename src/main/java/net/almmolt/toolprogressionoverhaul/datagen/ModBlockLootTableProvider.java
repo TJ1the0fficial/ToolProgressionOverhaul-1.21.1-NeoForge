@@ -7,7 +7,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
@@ -47,8 +46,12 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
     protected void generate() {
         add(ModBlocks.TIN_ORE.get(),
                 createCustomOreDrops(ModBlocks.TIN_ORE.get(),ModItems.RAW_TIN.get(),1,3));
-        add(ModBlocks.TIN_DEEPSLATE_ORE.get(),
-                createCustomOreDrops(ModBlocks.TIN_DEEPSLATE_ORE.get(),ModItems.RAW_TIN.get(),1,5));
+        add(ModBlocks.DEEPSLATE_TIN_ORE.get(),
+                createCustomOreDrops(ModBlocks.DEEPSLATE_TIN_ORE.get(),ModItems.RAW_TIN.get(),1,5));
+        dropSelf(ModBlocks.TIN_BLOCK.get());
+        dropSelf(ModBlocks.RAW_TIN_BLOCK.get());
+        dropSelf(ModBlocks.BRONZE_BLOCK.get());
+        dropSelf(ModBlocks.ALLOYING_SMELTER.get());
     }
 
     public LootTable.Builder createCustomOreDrops(Block block, Item item , float min, float max) {

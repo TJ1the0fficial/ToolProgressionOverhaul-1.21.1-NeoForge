@@ -1,12 +1,17 @@
 package net.almmolt.toolprogressionoverhaul.datagen;
 
+import net.almmolt.toolprogressionoverhaul.ToolProgressionOverhaul;
+import net.almmolt.toolprogressionoverhaul.block.ModBlocks;
 import net.almmolt.toolprogressionoverhaul.item.ModItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.ShapelessRecipe;
+import net.minecraft.world.level.block.Blocks;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -25,7 +30,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('C', Items.COPPER_INGOT)
                 .define('T', ModItems.TIN_INGOT)
                 .unlockedBy("tin_ingot", has(ModItems.TIN_INGOT))
-                .save(output);
+                .save(output, ResourceLocation.fromNamespaceAndPath(ToolProgressionOverhaul.MODID, "bronze_ingot_from_alloying"));
 
         SimpleCookingRecipeBuilder.smelting(
                         Ingredient.of(ModItems.RAW_TIN),
@@ -122,6 +127,57 @@ public class ModRecipeProvider extends RecipeProvider {
                 .pattern("B B")
                 .define('B', ModItems.BRONZE_INGOT)
                 .unlockedBy("bronze_ingot", has(ModItems.BRONZE_INGOT))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.TIN_BLOCK_ASITEM.get())
+                .pattern("TTT")
+                .pattern("TTT")
+                .pattern("TTT")
+                .define('T', ModItems.TIN_INGOT)
+                .unlockedBy("tin_ingot", has(ModItems.TIN_INGOT))
+                .save(output);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.TIN_INGOT.get(), 9)
+                .requires(ModBlocks.TIN_BLOCK_ASITEM.get())
+                .unlockedBy("tin_ingot", has(ModItems.TIN_INGOT))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.RAW_TIN_BLOCK_ASITEM.get())
+                .pattern("TTT")
+                .pattern("TTT")
+                .pattern("TTT")
+                .define('T', ModItems.RAW_TIN)
+                .unlockedBy("tin_ingot", has(ModItems.RAW_TIN))
+                .save(output);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.RAW_TIN.get(), 9)
+                .requires(ModBlocks.RAW_TIN_BLOCK_ASITEM.get())
+                .unlockedBy("tin_ingot", has(ModItems.RAW_TIN))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.BRONZE_BLOCK_ASITEM.get())
+                .pattern("BBB")
+                .pattern("BBB")
+                .pattern("BBB")
+                .define('B', ModItems.BRONZE_INGOT)
+                .unlockedBy("bronze_ingot", has(ModItems.BRONZE_INGOT))
+                .save(output);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.BRONZE_INGOT.get(), 9)
+                .requires(ModBlocks.BRONZE_BLOCK_ASITEM.get())
+                .unlockedBy("bronze_ingot", has(ModItems.BRONZE_INGOT))
+                .save(output, ResourceLocation.fromNamespaceAndPath(ToolProgressionOverhaul.MODID, "bronze_ingot_from_block"));
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.ALLOYING_SMELTER_ASITEM.get())
+                .pattern("TBT")
+                .pattern("BFB")
+                .pattern("RbR")
+                .define('T', ModItems.TIN_INGOT)
+                .define('B', ModItems.BRONZE_INGOT)
+                .define('b', Blocks.BRICKS.asItem())
+                .define('R', Items.REDSTONE)
+                .define('F', Blocks.BLAST_FURNACE.asItem())
+                .unlockedBy("iron_ingot", has(Items.IRON_INGOT))
                 .save(output);
     }
 }

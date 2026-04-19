@@ -28,5 +28,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         basicItem(ModItems.BRONZE_CHESTPLATE.get());
         basicItem(ModItems.BRONZE_LEGGINGS.get());
         basicItem(ModItems.BRONZE_BOOTS.get());
+
+        simpleBlockItem(ModBlocks.ALLOYING_SMELTER.get());
     }
 }

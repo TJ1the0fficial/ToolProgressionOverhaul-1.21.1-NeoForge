@@ -1,22 +1,17 @@
 package net.almmolt.toolprogressionoverhaul;
 
+import net.almmolt.toolprogressionoverhaul.block.ModBlockEntities;
 import net.almmolt.toolprogressionoverhaul.block.ModBlocks;
-import net.almmolt.toolprogressionoverhaul.datagen.DataGenerators;
+import net.almmolt.toolprogressionoverhaul.block.custom.alloyingsmelter.AlloyingSmelterRecipeSerializer;
+import net.almmolt.toolprogressionoverhaul.gui.ModMenus;
 import net.almmolt.toolprogressionoverhaul.item.ModItems;
-import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.*;
+import net.minecraft.world.level.block.Blocks;
+import net.neoforged.fml.loading.FMLEnvironment;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
 
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.MapColor;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -48,6 +43,13 @@ public class ToolProgressionOverhaul {
 
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
+        ModBlockEntities.register(modEventBus);
+        ModMenus.MENUS.register(modEventBus);
+        AlloyingSmelterRecipeSerializer.RECIPE_SERIALIZERS.register(modEventBus);
+
+        if (FMLEnvironment.dist.isClient()) {
+            modEventBus.addListener(ModMenus::registerScreens);
+        }
 
         // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);
@@ -57,23 +59,45 @@ public class ToolProgressionOverhaul {
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
-        // Some common setup code
-        LOGGER.info("HELLO FROM COMMON SETUP");
-
-        if (Config.LOG_DIRT_BLOCK.getAsBoolean()) {
-            LOGGER.info("DIRT BLOCK >> {}", BuiltInRegistries.BLOCK.getKey(Blocks.DIRT));
-        }
-
-        LOGGER.info("{}{}", Config.MAGIC_NUMBER_INTRODUCTION.get(), Config.MAGIC_NUMBER.getAsInt());
-
-        Config.ITEM_STRINGS.get().forEach((item) -> LOGGER.info("ITEM >> {}", item));
     }
 
     // Add the example block item to the building blocks tab
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.NATURAL_BLOCKS) {
-            event.accept(ModBlocks.TIN_ORE);
-            event.accept(ModBlocks.TIN_DEEPSLATE_ORE);
+            event.insertAfter(
+                    new ItemStack(Blocks.COPPER_ORE),
+                    new ItemStack(ModBlocks.TIN_ORE_ASITEM.get()),
+                    CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS
+            );
+            event.insertAfter(
+                    new ItemStack(Blocks.DEEPSLATE_COPPER_ORE),
+                    new ItemStack(ModBlocks.DEEPSLATE_TIN_ORE_ASITEM.get()),
+                    CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS
+            );
+            event.insertAfter(
+                    new ItemStack(Blocks.RAW_COPPER_BLOCK),
+                    new ItemStack(ModBlocks.RAW_TIN_BLOCK_ASITEM.get()),
+                    CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS
+            );
+        }
+        else if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
+            event.insertAfter(
+                    new ItemStack(Blocks.COPPER_BLOCK),
+                    new ItemStack(ModBlocks.TIN_BLOCK_ASITEM.get()),
+                    CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS
+            );
+            event.insertAfter(
+                    new ItemStack(ModBlocks.TIN_BLOCK_ASITEM.get()),
+                    new ItemStack(ModBlocks.BRONZE_BLOCK_ASITEM.get()),
+                    CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS
+            );
+        }
+        else if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
+            event.insertAfter(
+                    new ItemStack(Blocks.BLAST_FURNACE),
+                    new ItemStack(ModBlocks.ALLOYING_SMELTER_ASITEM.get()),
+                    CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS
+            );
         }
         else if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
             event.insertAfter(

@@ -1,4 +1,4 @@
-<div align="center">
+<div align="center" style="margin-left:10%;margin-right:10%;">
   <h1>Tool Progression Overhaul</h1>
     <div align="left">
   <p>This mod overhauls the progression by introducing new stuff and reintroducing vanilla stuff.</p>
@@ -12,10 +12,5 @@
 ## Plans:
 - [x] Add Bronze Tools and Armor
 - [ ] Plan progression roadmap
-
-> I heard that if every tool and armor would have something  
-> good about them then the game would be better,  
-> because there would be a reason to use old armor and not throw it out.
-
-- [ ] Remove vanilla tools and armor
 - [ ] Add all tool and armor to the game
+- [ ] Rework what pickaxe can mine what

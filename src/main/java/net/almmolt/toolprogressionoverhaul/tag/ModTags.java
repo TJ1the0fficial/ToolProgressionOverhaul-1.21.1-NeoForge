@@ -22,6 +22,11 @@ public class ModTags {
             ResourceLocation.withDefaultNamespace("mineable/pickaxe")
     );
 
+    public static final TagKey<Block> TIN_ORES = TagKey.create(
+            Registries.BLOCK,
+            ResourceLocation.fromNamespaceAndPath(ToolProgressionOverhaul.MODID,"tin_ores")
+    );
+
     public static final TagKey<Block> INCORRECT_FOR_BRONZE_TOOL = TagKey.create(
             Registries.BLOCK,
             ResourceLocation.withDefaultNamespace("incorrect_for_bronze_tool")
