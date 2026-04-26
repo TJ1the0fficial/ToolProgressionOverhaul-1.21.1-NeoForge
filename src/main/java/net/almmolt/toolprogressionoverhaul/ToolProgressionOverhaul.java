@@ -2,7 +2,6 @@ package net.almmolt.toolprogressionoverhaul;
 
 import net.almmolt.toolprogressionoverhaul.block.ModBlockEntities;
 import net.almmolt.toolprogressionoverhaul.block.ModBlocks;
-import net.almmolt.toolprogressionoverhaul.block.custom.alloyingsmelter.AlloyingSmelterRecipeSerializer;
 import net.almmolt.toolprogressionoverhaul.gui.ModMenus;
 import net.almmolt.toolprogressionoverhaul.item.ModItems;
 import net.minecraft.world.item.*;
@@ -45,11 +44,9 @@ public class ToolProgressionOverhaul {
         ModBlocks.register(modEventBus);
         ModBlockEntities.register(modEventBus);
         ModMenus.MENUS.register(modEventBus);
-        AlloyingSmelterRecipeSerializer.RECIPE_SERIALIZERS.register(modEventBus);
 
-        if (FMLEnvironment.dist.isClient()) {
-            modEventBus.addListener(ModMenus::registerScreens);
-        }
+        // Register all screens
+        modEventBus.addListener(ModMenus::registerScreens);
 
         // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);

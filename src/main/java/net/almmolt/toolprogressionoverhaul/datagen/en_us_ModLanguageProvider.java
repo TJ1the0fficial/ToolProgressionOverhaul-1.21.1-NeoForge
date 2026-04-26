@@ -58,6 +58,9 @@ public class en_us_ModLanguageProvider extends LanguageProvider {
 
         add(setId_T("bronze_ingot"),"Our first alloy!");
         add(setId_D("bronze_ingot"),"Combine Tin and Copper. 3 Copper and 1 Tin");
+
+        add(setId_T("alloying_smelter"),"Now let's get to Alloying!");
+        add(setId_D("alloying_smelter"),"Craft an Alloying Smelter.");
     }
 
     public static String setId_T(String title) {

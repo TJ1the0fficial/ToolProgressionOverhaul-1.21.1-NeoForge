@@ -8,6 +8,7 @@ import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
@@ -20,10 +21,7 @@ public class ModMenus {
 
     public static final Supplier<MenuType<AlloyingSmelterMenu>> ALLOYING_SMELTER_MENU = MENUS.register(
             "alloying_smelter_menu",
-            () -> new MenuType(
-                    AlloyingSmelterMenu::new,
-                    FeatureFlags.DEFAULT_FLAGS
-            )
+            () -> IMenuTypeExtension.create(AlloyingSmelterMenu::new) // This now looks for a 3-argument constructor
     );
 
     @SubscribeEvent // on the mod event bus only on the physical client

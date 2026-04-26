@@ -24,8 +24,10 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
         tag(ModTags.MINEABLE_BY_PICKAXE)
                 .add(ModBlocks.TIN_ORE.get())
                 .add(ModBlocks.TIN_BLOCK.get())
+                .add(ModBlocks.DEEPSLATE_TIN_ORE.get())
                 .add(ModBlocks.RAW_TIN_BLOCK.get())
-                .add(ModBlocks.BRONZE_BLOCK.get());
+                .add(ModBlocks.BRONZE_BLOCK.get())
+                .add(ModBlocks.ALLOYING_SMELTER.get());
 
         tag(ModTags.TIN_ORES)
                 .add(ModBlocks.TIN_ORE.get())

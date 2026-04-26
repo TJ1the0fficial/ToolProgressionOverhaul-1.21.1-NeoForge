@@ -1,6 +1,7 @@
 package net.almmolt.toolprogressionoverhaul.datagen;
 
 import net.almmolt.toolprogressionoverhaul.ToolProgressionOverhaul;
+import net.almmolt.toolprogressionoverhaul.block.ModBlocks;
 import net.almmolt.toolprogressionoverhaul.item.ModItems;
 import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
@@ -52,6 +53,13 @@ public class ModAdvancementProvider extends AdvancementProvider {
                     "bronze_ingot",
                     ModItems.BRONZE_INGOT.get(),
                     tinIngot
+            );
+
+            AdvancementHolder alloyingSmelter = createGoal(
+                    saver, existingFileHelper,
+                    "alloying_smelter",
+                    ModBlocks.ALLOYING_SMELTER_ASITEM.get(),
+                    bronzeIngot
             );
         }
     }

@@ -2,110 +2,170 @@ package net.almmolt.toolprogressionoverhaul.block.custom.alloyingsmelter;
 
 import net.almmolt.toolprogressionoverhaul.block.ModBlocks;
 import net.almmolt.toolprogressionoverhaul.gui.ModMenus;
-import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.items.SlotItemHandler;
 
-import java.util.function.Supplier;
-
 public class AlloyingSmelterMenu extends AbstractContainerMenu {
-    private final AlloyingSmelterBlockEntity blockEntity;
+    public final AlloyingSmelterBlockEntity blockEntity;
+    final ContainerLevelAccess access;
+    private final ContainerData data;
 
-    // Client-side constructor (NeoForge calls this when opening the screen)
-    public AlloyingSmelterMenu(int containerId, Inventory playerInv) {
-        this(containerId, playerInv, (AlloyingSmelterBlockEntity) null);
+    // Client Constructor (Invoked by NeoForge via the MenuType)
+    public AlloyingSmelterMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf extraData) {
+        this(containerId, playerInventory, (AlloyingSmelterBlockEntity) playerInventory.player.level().getBlockEntity(extraData.readBlockPos()));
     }
 
-    // Server-side constructor
-    public AlloyingSmelterMenu(int containerId, Inventory playerInv, AlloyingSmelterBlockEntity entity) {
+    // Main Constructor (Used by both Server and Client)
+    public AlloyingSmelterMenu(int containerId, Inventory playerInventory, AlloyingSmelterBlockEntity entity) {
         super(ModMenus.ALLOYING_SMELTER_MENU.get(), containerId);
         this.blockEntity = entity;
+        this.access = ContainerLevelAccess.create(entity.getLevel(), entity.getBlockPos());
+        this.data = entity.getData();
 
-        // Use the BlockEntity's inventory, or a dummy if on client
-        IItemHandler inv = entity != null ? entity.inventory : new ItemStackHandler(4);
+        // Register the data slots (syncs progress/fuel)
+        this.addDataSlots(this.data);
 
-        // 1. ADD MACHINE SLOTS (Example positions)
-        this.addSlot(new SlotItemHandler(inv, 0, 44, 12)); // Input 1
-        this.addSlot(new SlotItemHandler(inv, 1, 80, 12)); // Input 2
-        this.addSlot(new SlotItemHandler(inv, 2, 116, 12)); // Input 3
-        this.addSlot(new SlotItemHandler(inv, 3, 80, 58)); // Output
+        // Add slots using the BlockEntity's inventory
+        IItemHandler handler = entity.inventory;
+        this.addSlot(new SlotItemHandler(handler, 0, 44, 12));
+        this.addSlot(new SlotItemHandler(handler, 1, 80, 12));
+        this.addSlot(new SlotItemHandler(handler, 2, 116, 12));
+        this.addSlot(new SlotItemHandler(handler, 3, 143, 48));
+        this.addSlot(new SlotItemHandler(handler, 4, 80, 58));
 
-        // 2. ADD PLAYER INVENTORY (Standard MC layout)
-        for (int row = 0; row < 3; ++row) {
-            for (int col = 0; col < 9; ++col) {
-                this.addSlot(new Slot(playerInv, col + row * 9 + 9, 8 + col * 18, 84 + row * 18));
+        // Player Inventory
+        for(int i = 0; i < 3; ++i) {
+            for(int j = 0; j < 9; ++j) {
+                this.addSlot(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
             }
         }
-
-        // 3. ADD PLAYER HOTBAR
-        for (int col = 0; col < 9; ++col) {
-            this.addSlot(new Slot(playerInv, col, 8 + col * 18, 142));
+        // Hotbar
+        for(int k = 0; k < 9; ++k) {
+            this.addSlot(new Slot(playerInventory, k, 8 + k * 18, 142));
         }
     }
 
-    @Override
-    public ItemStack quickMoveStack(Player player, int index) {
-        ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = this.slots.get(index);
+    // Helper method for progress bar in Screen
+    public int getProgress() {
+        return this.data.get(0);
+    }
 
-        if (slot != null && slot.hasItem()) {
-            ItemStack itemstack1 = slot.getItem();
-            itemstack = itemstack1.copy();
+    public int getFuelCapacity() {
+        return this.data.get(1);
+    }
 
-            // IF THE ITEM IS IN THE MACHINE SLOTS (0-3)
-            if (index < 4) {
-                // Try moving it to the player inventory (slots 4-40)
-                if (!this.moveItemStackTo(itemstack1, 4, 40, true)) {
-                    return ItemStack.EMPTY;
-                }
-            }
-            // IF THE ITEM IS IN THE PLAYER INVENTORY (4-39)
-            else {
-                // 1. Try to move to the INPUT SLOTS (0, 1, 2)
-                // Note: We stop at index 3 because index 3 is the Output slot.
-                // We don't want players shift-clicking items into the output!
-                if (!this.moveItemStackTo(itemstack1, 0, 3, false)) {
+    public int getScaledProgress() {
+        int progress = this.data.get(0);
+        int maxProgress = 200; // Total ticks to smelt
+        int progressArrowSize = 40;
+        return progress != 0 && maxProgress != 0 ? progress * progressArrowSize / maxProgress : 0;
+    }
 
-                    // 2. If it couldn't go into the machine, move between Hotbar and Main Inventory
-                    if (index < 31) { // From Main Inventory to Hotbar
-                        if (!this.moveItemStackTo(itemstack1, 31, 40, false)) {
-                            return ItemStack.EMPTY;
-                        }
-                    } else { // From Hotbar to Main Inventory
-                        if (!this.moveItemStackTo(itemstack1, 4, 31, false)) {
-                            return ItemStack.EMPTY;
-                        }
-                    }
-                }
-            }
-
-            if (itemstack1.isEmpty()) {
-                slot.setByPlayer(ItemStack.EMPTY);
-            } else {
-                slot.setChanged();
-            }
-
-            if (itemstack1.getCount() == itemstack.getCount()) {
-                return ItemStack.EMPTY;
-            }
-
-            slot.onTake(player, itemstack1);
-        }
-
-        return itemstack;
+    public int getScaledFuel() {
+        int fuel = this.data.get(1);
+        int maxFuel = AlloyingSmelterBlockEntity.MAX_FUEL; // Total fuel capacity
+        int fuelFlameSize = AlloyingSmelterBlockEntity.MIN_FUEL_PROGRESS; // The height of your flame in pixels
+        return fuel != 0 && maxFuel != 0 ? fuel * fuelFlameSize / maxFuel : 0;
     }
 
     @Override
     public boolean stillValid(Player player) {
-        return this.blockEntity == null ? true : AbstractContainerMenu.stillValid(ContainerLevelAccess.create(this.blockEntity.getLevel(), this.blockEntity.getBlockPos()), player, ModBlocks.ALLOYING_SMELTER.get());
+        return stillValid(this.access, player, ModBlocks.ALLOYING_SMELTER.get());
     }
 
-    // Your quickMoveStack logic looks mostly okay, but ensure the indexes
-    // match the 4 machine slots + 36 player slots!
+    // Assume we have a data inventory of size 5
+// The inventory has 4 inputs (index 1 - 4) which outputs to a result slot (index 0)
+// We also have the 27 player inventory slots and the 9 hotbar slots
+// As such, the actual slots are indexed like so:
+//   - Data Inventory: Result (0), Inputs (1 - 4)
+//   - Player Inventory (5 - 31)
+//   - Player Hotbar (32 - 40)
+    @Override
+    public ItemStack quickMoveStack(Player player, int quickMovedSlotIndex) {
+        // The quick moved slot stack
+        ItemStack quickMovedStack = ItemStack.EMPTY;
+        // The quick moved slot
+        Slot quickMovedSlot = this.slots.get(quickMovedSlotIndex);
+
+        // If the slot is in the valid range and the slot is not empty
+        if (quickMovedSlot != null && quickMovedSlot.hasItem()) {
+            // Get the raw stack to move
+            ItemStack rawStack = quickMovedSlot.getItem();
+            // Set the slot stack to a copy of the raw stack
+            quickMovedStack = rawStack.copy();
+
+        /*
+        The following quick move logic can be simplified to if in data inventory,
+        try to move to player inventory/hotbar and vice versa for containers
+        that cannot transform data (e.g. chests).
+        */
+
+            // If the quick move was performed on the data inventory result slot
+            if (quickMovedSlotIndex == 0) {
+                // Try to move the result slot into the player inventory/hotbar
+                if (!this.moveItemStackTo(rawStack, 5, 41, true)) {
+                    // If cannot move, no longer quick move
+                    return ItemStack.EMPTY;
+                }
+
+                // Perform logic on result slot quick move
+//                slot.onQuickCraft(rawStack, quickMovedStack);
+            }
+            // Else if the quick move was performed on the player inventory or hotbar slot
+            else if (quickMovedSlotIndex >= 5 && quickMovedSlotIndex < 41) {
+                // Try to move the inventory/hotbar slot into the data inventory input slots
+                if (!this.moveItemStackTo(rawStack, 0, 3, false)) {
+                    // If cannot move and in player inventory slot, try to move to hotbar
+                    if (quickMovedSlotIndex < 32) {
+                        if (!this.moveItemStackTo(rawStack, 32, 41, false)) {
+                            // If cannot move, no longer quick move
+                            return ItemStack.EMPTY;
+                        }
+                    }
+                    // Else try to move hotbar into player inventory slot
+                    else if (!this.moveItemStackTo(rawStack, 5, 32, false)) {
+                        // If cannot move, no longer quick move
+                        return ItemStack.EMPTY;
+                    }
+                }
+            }
+            // Else if the quick move was performed on the data inventory input slots, try to move to player inventory/hotbar
+            else if (!this.moveItemStackTo(rawStack, 5, 41, false)) {
+                // If cannot move, no longer quick move
+                return ItemStack.EMPTY;
+            }
+
+            if (rawStack.isEmpty()) {
+                // If the raw stack has completely moved out of the slot, set the slot to the empty stack
+                quickMovedSlot.set(ItemStack.EMPTY);
+            } else {
+                // Otherwise, notify the slot that that the stack count has changed
+                quickMovedSlot.setChanged();
+            }
+
+        /*
+        The following if statement and Slot#onTake call can be removed if the
+        menu does not represent a container that can transform stacks (e.g.
+        chests).
+        */
+            if (rawStack.getCount() == quickMovedStack.getCount()) {
+                // If the raw stack was not able to be moved to another slot, no longer quick move
+                return ItemStack.EMPTY;
+            }
+            // Execute logic on what to do post move with the remaining stack
+            quickMovedSlot.onTake(player, rawStack);
+        }
+
+        return quickMovedStack; // Return the slot stack
+    }
+
+//    @Override
+//    public boolean stillValid(Player player) {
+//        return AbstractContainerMenu.stillValid(this.access, player, ModBlocks.ALLOYING_SMELTER.get());
+//    }
 }

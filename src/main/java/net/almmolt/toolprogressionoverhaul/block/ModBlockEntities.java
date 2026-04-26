@@ -13,13 +13,13 @@ public class ModBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES =
             DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, ToolProgressionOverhaul.MODID);
 
-    public static final Supplier<BlockEntityType<AlloyingSmelterBlockEntity>> ALLOYING_SMELTER_BLOCK_ENTITY = ModBlockEntities.BLOCK_ENTITY_TYPES.register(
+    public static final Supplier<BlockEntityType<AlloyingSmelterBlockEntity>> ALLOYING_SMELTER_BLOCK_ENTITY = BLOCK_ENTITY_TYPES.register(
             "alloying_smelter_block_entity",
             () -> BlockEntityType.Builder.of(
-                            AlloyingSmelterBlockEntity::new,
-                            ModBlocks.ALLOYING_SMELTER.get()
-                    )
-                    .build(null)
+                    AlloyingSmelterBlockEntity::new,
+                    ModBlocks.ALLOYING_SMELTER.get()
+            )
+            .build(null)
     );
 
     public static void register(IEventBus modEventBus) {
