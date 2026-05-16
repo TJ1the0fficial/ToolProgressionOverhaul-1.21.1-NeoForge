@@ -4,9 +4,12 @@ import net.almmolt.toolprogressionoverhaul.block.ModBlockEntities;
 import net.almmolt.toolprogressionoverhaul.block.ModBlocks;
 import net.almmolt.toolprogressionoverhaul.gui.ModMenus;
 import net.almmolt.toolprogressionoverhaul.item.ModItems;
+import net.almmolt.toolprogressionoverhaul.recipe.ModRecipes;
+import net.almmolt.toolprogressionoverhaul.util.AmmoltUtilities.AMarmor;
+import net.almmolt.toolprogressionoverhaul.util.AmmoltUtilities.AMtool;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Blocks;
-import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.registries.DeferredItem;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -20,6 +23,8 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
+
+import java.util.List;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(ToolProgressionOverhaul.MODID)
@@ -44,6 +49,8 @@ public class ToolProgressionOverhaul {
         ModBlocks.register(modEventBus);
         ModBlockEntities.register(modEventBus);
         ModMenus.MENUS.register(modEventBus);
+        ModRecipes.register(modEventBus);
+
 
         // Register all screens
         modEventBus.addListener(ModMenus::registerScreens);
@@ -58,109 +65,184 @@ public class ToolProgressionOverhaul {
     private void commonSetup(FMLCommonSetupEvent event) {
     }
 
-    // Add the example block item to the building blocks tab
-    private void addCreative(BuildCreativeModeTabContentsEvent event) {
-        if (event.getTabKey() == CreativeModeTabs.NATURAL_BLOCKS) {
+    // Custom Utility functions, cause I'm lazy
+    private void insertAfter(BuildCreativeModeTabContentsEvent event, Item item1, Item item2) {
+        event.insertAfter(
+                new ItemStack(item1),
+                new ItemStack(item2),
+                CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS
+        );
+    }
+
+    private void insertThese(BuildCreativeModeTabContentsEvent event, Item afterWhat, List<Item> items) {
+        event.insertAfter(
+                new ItemStack(afterWhat),
+                new ItemStack(items.getFirst()),
+                CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS
+        );
+        for (int i = 1; i < items.size(); ++i) {
             event.insertAfter(
-                    new ItemStack(Blocks.COPPER_ORE),
-                    new ItemStack(ModBlocks.TIN_ORE_ASITEM.get()),
-                    CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS
-            );
-            event.insertAfter(
-                    new ItemStack(Blocks.DEEPSLATE_COPPER_ORE),
-                    new ItemStack(ModBlocks.DEEPSLATE_TIN_ORE_ASITEM.get()),
-                    CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS
-            );
-            event.insertAfter(
-                    new ItemStack(Blocks.RAW_COPPER_BLOCK),
-                    new ItemStack(ModBlocks.RAW_TIN_BLOCK_ASITEM.get()),
-                    CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS
-            );
-        }
-        else if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
-            event.insertAfter(
-                    new ItemStack(Blocks.COPPER_BLOCK),
-                    new ItemStack(ModBlocks.TIN_BLOCK_ASITEM.get()),
-                    CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS
-            );
-            event.insertAfter(
-                    new ItemStack(ModBlocks.TIN_BLOCK_ASITEM.get()),
-                    new ItemStack(ModBlocks.BRONZE_BLOCK_ASITEM.get()),
+                    new ItemStack(items.get(i-1)),
+                    new ItemStack(items.get(i)),
                     CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS
             );
         }
-        else if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
+    }
+
+    private void insertArmorAfter(BuildCreativeModeTabContentsEvent event, Item afterWhat, AMarmor.ArmorSet armorSet) {
+        if (event.getTabKey() == CreativeModeTabs.COMBAT) {
             event.insertAfter(
-                    new ItemStack(Blocks.BLAST_FURNACE),
-                    new ItemStack(ModBlocks.ALLOYING_SMELTER_ASITEM.get()),
+                    new ItemStack(afterWhat),
+                    new ItemStack(armorSet.asList().getFirst().get()),
                     CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS
             );
+
+            for (int i = 1; i < armorSet.asList().size(); ++i) {
+                event.insertAfter(
+                        new ItemStack(armorSet.asList().get(i-1).get()),
+                        new ItemStack(armorSet.asList().get(i).get()),
+                        CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS
+                );
+            }
         }
-        else if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
+    }
+
+    private void insertToolSet(BuildCreativeModeTabContentsEvent event, Item afterWhatSword, Item afterWhatAxe,Item afterWhatTheRest, AMtool.ToolSet toolSet) {
+        if (event.getTabKey() == CreativeModeTabs.COMBAT) {
             event.insertAfter(
-                    new ItemStack(Items.COPPER_INGOT),
-                    new ItemStack(ModItems.TIN_INGOT.get()),
+                    new ItemStack(afterWhatSword),
+                    new ItemStack(toolSet.swordItem().get()),
                     CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS
             );
             event.insertAfter(
-                    new ItemStack(ModItems.TIN_INGOT.get()),
-                    new ItemStack(ModItems.BRONZE_INGOT.get()),
-                    CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS
-            );
-            event.insertAfter(
-                    new ItemStack(Items.RAW_COPPER),
-                    new ItemStack(ModItems.RAW_TIN.get()),
-                    CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS
-            );
-        }
-        else if (event.getTabKey() == CreativeModeTabs.COMBAT) {
-            event.insertAfter(
-                    new ItemStack(Items.STONE_SWORD),
-                    new ItemStack(ModItems.BRONZE_SWORD.get()),
-                    CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS
-            );
-            event.insertAfter(
-                    new ItemStack(Items.LEATHER_BOOTS),
-                    new ItemStack(ModItems.BRONZE_HELMET.get()),
-                    CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS
-            );
-            event.insertAfter(
-                    new ItemStack(ModItems.BRONZE_HELMET.get()),
-                    new ItemStack(ModItems.BRONZE_CHESTPLATE.get()),
-                    CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS
-            );
-            event.insertAfter(
-                    new ItemStack(ModItems.BRONZE_CHESTPLATE.get()),
-                    new ItemStack(ModItems.BRONZE_LEGGINGS.get()),
-                    CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS
-            );
-            event.insertAfter(
-                    new ItemStack(ModItems.BRONZE_LEGGINGS.get()),
-                    new ItemStack(ModItems.BRONZE_BOOTS.get()),
+                    new ItemStack(afterWhatAxe),
+                    new ItemStack(toolSet.axeItem().get()),
                     CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS
             );
         }
         else if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
+            List<DeferredItem<? extends Item>> tools = toolSet.asList();
+
             event.insertAfter(
-                    new ItemStack(Items.STONE_HOE),
-                    new ItemStack(ModItems.BRONZE_SHOVEL.get()),
+                    new ItemStack(afterWhatTheRest),
+                    new ItemStack(tools.get(1).get()),
                     CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS
             );
+
+            for (int i = 2; i < tools.size()-1; ++i) {
+                event.insertAfter(
+                        new ItemStack(tools.get(i-1).get()),
+                        new ItemStack(tools.get(i).get()),
+                        CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS
+                );
+            }
+
             event.insertAfter(
-                    new ItemStack(ModItems.BRONZE_SHOVEL.get()),
-                    new ItemStack(ModItems.BRONZE_PICKAXE.get()),
+                    new ItemStack(toolSet.hoeItem().get()),
+                    new ItemStack(toolSet.hammerItem().get()),
                     CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS
             );
-            event.insertAfter(
-                    new ItemStack(ModItems.BRONZE_PICKAXE.get()),
-                    new ItemStack(ModItems.BRONZE_AXE.get()),
-                    CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS
-            );
-            event.insertAfter(
-                    new ItemStack(ModItems.BRONZE_AXE.get()),
-                    new ItemStack(ModItems.BRONZE_HOE.get()),
-                    CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS
-            );
+        }
+    }
+    //
+
+    // Add the example AMblock item to the building blocks tab
+    private void addCreative(BuildCreativeModeTabContentsEvent event) {
+        insertToolSet(
+                event,
+                Items.STONE_SWORD,
+                Items.STONE_AXE,
+                Items.STONE_HOE,
+                ModItems.BRONZE_TOOLS
+        );
+        insertToolSet(
+                event,
+                ModItems.BRONZE_TOOLS.swordItem().get(),
+                ModItems.BRONZE_TOOLS.axeItem().get(),
+                ModItems.BRONZE_TOOLS.hoeItem().get(),
+                ModItems.SILVER_TOOLS
+        );
+        insertToolSet(
+                event,
+                ModItems.SILVER_TOOLS.swordItem().get(),
+                ModItems.SILVER_TOOLS.axeItem().get(),
+                ModItems.SILVER_TOOLS.hoeItem().get(),
+                ModItems.INVAR_TOOLS
+        );
+        insertArmorAfter(
+                event,
+                Items.IRON_BOOTS,
+                ModItems.BRONZE_ARMOR
+        );
+        insertArmorAfter(
+                event,
+                ModItems.BRONZE_ARMOR.bootsItem().get(),
+                ModItems.SILVER_ARMOR
+        );
+        insertArmorAfter(
+                event,
+                ModItems.SILVER_ARMOR.bootsItem().get(),
+                ModItems.INVAR_ARMOR
+        );
+
+        if (event.getTabKey() == CreativeModeTabs.NATURAL_BLOCKS) {
+            insertAfter(event,Blocks.COPPER_ORE.asItem(),ModBlocks.TIN_ORE.blockItem().get());
+            insertAfter(event,Blocks.DEEPSLATE_COPPER_ORE.asItem(),ModBlocks.DEEPSLATE_TIN_ORE.blockItem().get());
+            insertThese(event,Blocks.RAW_COPPER_BLOCK.asItem(),List.of(
+                ModBlocks.RAW_TIN_BLOCK.blockItem().get(),
+                ModBlocks.RAW_NICKEL_BLOCK.blockItem().get(),
+                ModBlocks.RAW_SILVER_BLOCK.blockItem().get()
+            ));
+            insertAfter(event,ModBlocks.TIN_ORE.blockItem().get(),ModBlocks.NICKEL_ORE.blockItem().get());
+            insertAfter(event,ModBlocks.DEEPSLATE_TIN_ORE.blockItem().get(),ModBlocks.DEEPSLATE_NICKEL_ORE.blockItem().get());
+            insertAfter(event,ModBlocks.NICKEL_ORE.blockItem().get(),ModBlocks.SILVER_ORE.blockItem().get());
+            insertAfter(event,ModBlocks.DEEPSLATE_NICKEL_ORE.blockItem().get(),ModBlocks.DEEPSLATE_SILVER_ORE.blockItem().get());
+        }
+        else if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
+            insertThese(event, Blocks.COPPER_BLOCK.asItem(), List.of(
+                    ModBlocks.TIN_BLOCK.blockItem().get(),
+                    ModBlocks.BRONZE_BLOCK.blockItem().get(),
+                    ModBlocks.NICKEL_BLOCK.blockItem().get(),
+                    ModBlocks.SILVER_BLOCK.blockItem().get(),
+                    ModBlocks.INVAR_BLOCK.blockItem().get()
+            ));
+        }
+        else if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
+            insertAfter(event,Blocks.BLAST_FURNACE.asItem(),ModBlocks.ALLOYING_SMELTER_ASITEM.get());
+            insertAfter(event,ModBlocks.ALLOYING_SMELTER_ASITEM.get(),ModBlocks.CRUSHER.get().asItem());
+        }
+        else if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
+            insertThese(event,Items.COPPER_INGOT,List.of(
+                    ModItems.TIN_INGOT.get(),
+                    ModItems.BRONZE_INGOT.get(),
+                    ModItems.SILVER_INGOT.get(),
+                    ModItems.NICKEL_INGOT.get(),
+                    ModItems.INVAR_INGOT.get(),
+                    ModItems.IRON_CRUSHING_WHEEL.get(),
+                    ModItems.SILVER_CRUSHING_WHEEL.get()
+            ));
+
+            insertThese(event, Items.RAW_COPPER,List.of(
+                    ModItems.RAW_TIN.get(),
+                    ModItems.RAW_NICKEL.get(),
+                    ModItems.RAW_SILVER.get()
+            ));
+
+            insertThese(event,Items.NETHERITE_INGOT,List.of(
+                    ModItems.TIN_DUST.get(),
+                    ModItems.COPPER_DUST.get(),
+                    ModItems.BRONZE_DUST.get(),
+                    ModItems.SILVER_DUST.get(),
+                    ModItems.NICKEL_DUST.get(),
+                    ModItems.INVAR_DUST.get(),
+                    ModItems.IRON_DUST.get(),
+                    ModItems.COAL_DUST.get()
+            ));
+        }
+//        else if (event.getTabKey() == CreativeModeTabs.COMBAT) {
+//        }
+        else if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
+            insertAfter(event,Items.IRON_HOE,ModItems.IRON_HAMMER.get());
         }
     }
 

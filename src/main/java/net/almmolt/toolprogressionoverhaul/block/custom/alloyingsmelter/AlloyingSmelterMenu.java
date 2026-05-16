@@ -13,7 +13,7 @@ import net.neoforged.neoforge.items.SlotItemHandler;
 public class AlloyingSmelterMenu extends AbstractContainerMenu {
     public final AlloyingSmelterBlockEntity blockEntity;
     final ContainerLevelAccess access;
-    private final ContainerData data;
+    final ContainerData data;
 
     // Client Constructor (Invoked by NeoForge via the MenuType)
     public AlloyingSmelterMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf extraData) {
@@ -32,21 +32,21 @@ public class AlloyingSmelterMenu extends AbstractContainerMenu {
 
         // Add slots using the BlockEntity's inventory
         IItemHandler handler = entity.inventory;
-        this.addSlot(new SlotItemHandler(handler, 0, 44, 12));
-        this.addSlot(new SlotItemHandler(handler, 1, 80, 12));
-        this.addSlot(new SlotItemHandler(handler, 2, 116, 12));
-        this.addSlot(new SlotItemHandler(handler, 3, 143, 48));
-        this.addSlot(new SlotItemHandler(handler, 4, 80, 58));
+        this.addSlot(new SlotItemHandler(handler, 0, 44, 23));
+        this.addSlot(new SlotItemHandler(handler, 1, 80, 23));
+        this.addSlot(new SlotItemHandler(handler, 2, 116, 23));
+        this.addSlot(new SlotItemHandler(handler, 3, 143, 59));
+        this.addSlot(new SlotItemHandler(handler, 4, 80, 69));
 
         // Player Inventory
         for(int i = 0; i < 3; ++i) {
             for(int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+                this.addSlot(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 95 + i * 18));
             }
         }
         // Hotbar
         for(int k = 0; k < 9; ++k) {
-            this.addSlot(new Slot(playerInventory, k, 8 + k * 18, 142));
+            this.addSlot(new Slot(playerInventory, k, 8 + k * 18, 153));
         }
     }
 
@@ -54,21 +54,31 @@ public class AlloyingSmelterMenu extends AbstractContainerMenu {
     public int getProgress() {
         return this.data.get(0);
     }
-
+    public int getMaxProgress() {return this.data.get(1);}
     public int getFuelCapacity() {
-        return this.data.get(1);
+        return this.data.get(2);
+    }
+    public int getMaxFuelCapacity() {
+        return this.data.get(3);
     }
 
-    public int getScaledProgress() {
-        int progress = this.data.get(0);
-        int maxProgress = 200; // Total ticks to smelt
-        int progressArrowSize = 40;
+    public int getScaledProgressSIDES() {
+        int progress = getProgress();
+        int maxProgress = getMaxProgress(); // Total ticks to smelt
+        int progressArrowSize = 41;
+        return progress != 0 && maxProgress != 0 ? progress * progressArrowSize / maxProgress : 0;
+    }
+
+    public int getScaledProgressMID() {
+        int progress = getProgress();
+        int maxProgress = getMaxProgress(); // Total ticks to smelt
+        int progressArrowSize = 19;
         return progress != 0 && maxProgress != 0 ? progress * progressArrowSize / maxProgress : 0;
     }
 
     public int getScaledFuel() {
-        int fuel = this.data.get(1);
-        int maxFuel = AlloyingSmelterBlockEntity.MAX_FUEL; // Total fuel capacity
+        int fuel = getFuelCapacity();
+        int maxFuel = getMaxFuelCapacity(); // Total fuel capacity
         int fuelFlameSize = AlloyingSmelterBlockEntity.MIN_FUEL_PROGRESS; // The height of your flame in pixels
         return fuel != 0 && maxFuel != 0 ? fuel * fuelFlameSize / maxFuel : 0;
     }

@@ -1,222 +1,348 @@
 package net.almmolt.toolprogressionoverhaul.item;
 
 import net.almmolt.toolprogressionoverhaul.ToolProgressionOverhaul;
+import net.almmolt.toolprogressionoverhaul.item.custom.HammerItem;
 import net.almmolt.toolprogressionoverhaul.tag.ModTags;
-import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.TagKey;
+import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.SimpleTier;
-import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
-import java.util.EnumMap;
 import java.util.List;
-import java.util.function.Supplier;
+
+import static net.almmolt.toolprogressionoverhaul.util.AmmoltUtilities.AMarmor.*;
+import static net.almmolt.toolprogressionoverhaul.util.AmmoltUtilities.AMsimpleItem.*;
+import static net.almmolt.toolprogressionoverhaul.util.AmmoltUtilities.AMtool.*;
 
 public class ModItems {
+    // Use AmmoltUtilities ONLY when it does not to something special!!!
+
     public static DeferredRegister.Items ITEMS = DeferredRegister.createItems(ToolProgressionOverhaul.MODID);
 
-    public static final DeferredItem<Item> TIN_INGOT = ITEMS.register(
-            "tin_ingot",
-            () -> new Item(new Item.Properties())
-    );
-
-    public static final DeferredItem<Item> RAW_TIN = ITEMS.register(
-            "raw_tin",
-            () -> new Item(new Item.Properties())
-    );
-
-    public static final DeferredItem<Item> BRONZE_INGOT = ITEMS.register(
-            "bronze_ingot",
-            () -> new Item(new Item.Properties())
-    );
-
-    // Bronze Tools
-    public static final Tier BRONZE_TIER = new SimpleTier(
-            ModTags.INCORRECT_FOR_BRONZE_TOOL,
-            216,
-            5.0f,
-            1.5f,
-            20,
-            () -> Ingredient.of(BRONZE_INGOT)
-    );
-
-    public static final DeferredItem<SwordItem> BRONZE_SWORD = ITEMS.register(
-            "bronze_sword",
-            () -> new SwordItem(
-                    BRONZE_TIER,
-                    new Item.Properties().attributes(
-                            SwordItem.createAttributes(
-                                    BRONZE_TIER,
-                                    setAttackDamage(5.5f),
-                                    setAttackSpeed(1.6f)
-                            )
-                    )
-            )
-    );
-
-    public static final DeferredItem<AxeItem> BRONZE_AXE = ITEMS.register(
-            "bronze_axe",
-            () -> new AxeItem(
-                    BRONZE_TIER,
-                    new Item.Properties().attributes(
-                            AxeItem.createAttributes(
-                                    BRONZE_TIER,
-                                    setAttackDamage(9.0f),
-                                    setAttackSpeed(0.9f)
-                            )
-                    )
-            )
-    );
-
-    public static final DeferredItem<PickaxeItem> BRONZE_PICKAXE = ITEMS.register(
-            "bronze_pickaxe",
-            () -> new PickaxeItem(
-                    BRONZE_TIER,
-                    new Item.Properties().attributes(
-                            PickaxeItem.createAttributes(
-                                    BRONZE_TIER,
-                                    setAttackDamage(3.5f),
-                                    setAttackSpeed(1.2f)
-                            )
-                    )
-            )
-    );
-
-    public static final DeferredItem<ShovelItem> BRONZE_SHOVEL = ITEMS.register(
-            "bronze_shovel",
-            () -> new ShovelItem(
-                    BRONZE_TIER,
-                    new Item.Properties().attributes(
-                            ShovelItem.createAttributes(
-                                    BRONZE_TIER,
-                                    setAttackDamage(4.0f),
-                                    setAttackSpeed(1.0f)
-                            )
-                    )
-            )
-    );
-
-    public static final DeferredItem<HoeItem> BRONZE_HOE = ITEMS.register(
-            "bronze_hoe",
-            () -> new HoeItem(
-                    BRONZE_TIER,
-                    new Item.Properties().attributes(
-                            HoeItem.createAttributes(
-                                    BRONZE_TIER,
-                                    setAttackDamage(1.0f),
-                                    setAttackSpeed(2.5f)
-                            )
-                    )
-            )
-    );
-    //
-
-    // Bronze Armor
-    // ARMOR_MATERIALS is a DeferredRegister<ArmorMaterial>
-
-    // We place copper somewhere between chainmail and iron.
     public static final DeferredRegister<ArmorMaterial> ARMOR_MATERIALS = DeferredRegister.create(
             BuiltInRegistries.ARMOR_MATERIAL,
             ToolProgressionOverhaul.MODID
     );
 
-    public static final Holder<ArmorMaterial> BRONZE_ARMOR_MATERIAL =
-            ARMOR_MATERIALS.register("bronze", () -> new ArmorMaterial(
-                    // Determines the defense value of this armor material, depending on what armor piece it is.
-                    Util.make(new EnumMap<>(ArmorItem.Type.class), map -> {
-                        map.put(ArmorItem.Type.BOOTS, 2);
-                        map.put(ArmorItem.Type.LEGGINGS, 4);
-                        map.put(ArmorItem.Type.CHESTPLATE, 6);
-                        map.put(ArmorItem.Type.HELMET, 2);
-                        map.put(ArmorItem.Type.BODY, 4);
-                    }),
-                    // Determines the enchantability of the tier. This represents how good the enchantments on this armor will be.
-                    // Gold uses 25, we put copper slightly below that.
-                    20,
-                    // Determines the sound played when equipping this armor.
-                    // This is wrapped with a Holder.
-                    SoundEvents.ARMOR_EQUIP_GENERIC,
-                    // Determines the repair item for this armor.
-                    () -> Ingredient.of(ModItems.BRONZE_INGOT),
-                    // Determines the texture locations of the armor to apply when rendering
-                    // This can also be specified by overriding 'IItemExtension#getArmorTexture' on your item if the armor texture needs to be more dynamic
-                    List.of(
-                            // Creates a new armor texture that will be located at:
-                            // - 'assets/mod_id/textures/models/armor/copper_layer_1.png' for the outer texture
-                            // - 'assets/mod_id/textures/models/armor/copper_layer_2.png' for the inner texture (only legs)
-                            new ArmorMaterial.Layer(
-                                    ResourceLocation.fromNamespaceAndPath(ToolProgressionOverhaul.MODID, "bronze")
-                            )
-                    ),
-                    // Returns the toughness value of the armor. The toughness value is an additional value included in
-                    // damage calculation, for more information, refer to the Minecraft Wiki's article on armor mechanics:
-                    // https://minecraft.wiki/w/Armor#Armor_toughness
-                    // Only diamond and netherite have values greater than 0 here, so we just return 0.
-                    0,
-                    // Returns the knockback resistance value of the armor. While wearing this armor, the player is
-                    // immune to knockback to some degree. If the player has a total knockback resistance value of 1 or greater
-                    // from all armor pieces combined, they will not take any knockback at all.
-                    // Only netherite has values greater than 0 here, so we just return 0.
-                    0
-            ));
+    public static final DeferredItem<Item> TIN_INGOT              = registerItem("tin_ingot","Tin Ingot");
+    public static final DeferredItem<Item> RAW_TIN                = registerItem("raw_tin","Raw Tin");
+    public static final DeferredItem<Item> BRONZE_INGOT           = registerItem("bronze_ingot","Bronze Ingot");
+    public static final DeferredItem<Item> TIN_DUST               = registerDust("tin_dust","Tin Dust");
+    public static final DeferredItem<Item> BRONZE_DUST            = registerDust("bronze_dust","Bronze Dust");
+    public static final DeferredItem<Item> COPPER_DUST            = registerDust("copper_dust","Copper Dust");
+    public static final DeferredItem<Item> RAW_SILVER             = registerItem("raw_silver","Raw Silver");
+    public static final DeferredItem<Item> SILVER_INGOT           = registerItem("silver_ingot", "Silver Ingot");
+    public static final DeferredItem<Item> SILVER_DUST            = registerDust("silver_dust", "Silver Dust");
+    public static final DeferredItem<Item> RAW_NICKEL             = registerItem("raw_nickel","Raw Nickel");
+    public static final DeferredItem<Item> NICKEL_INGOT           = registerItem("nickel_ingot", "Nickel Ingot");
+    public static final DeferredItem<Item> NICKEL_DUST            = registerDust("nickel_dust", "Nickel Dust");
+    public static final DeferredItem<Item> INVAR_INGOT            = registerItem("invar_ingot", "Invar Ingot");
+    public static final DeferredItem<Item> INVAR_DUST             = registerDust("invar_dust", "Invar Dust");
+    public static final DeferredItem<Item> IRON_DUST              = registerDust("iron_dust", "Iron Dust");
+    public static final DeferredItem<Item> IRON_CRUSHING_WHEEL    = registerWheel("iron_crushing_wheel", "Iron Crushing Wheel");
+    public static final DeferredItem<Item> COKE                   = registerItem("coke", "Coke");
+    public static final DeferredItem<Item> COAL_DUST              = registerDust("coal_dust", "Coal Dust");
+    public static final DeferredItem<Item> SILVER_CRUSHING_WHEEL  = registerWheel("silver_crushing_wheel", "Silver Crushing Wheel");
 
-    public static final Supplier<ArmorItem> BRONZE_HELMET = ITEMS.register(
-            "bronze_helmet",
-            () -> new ArmorItem(
-                BRONZE_ARMOR_MATERIAL,
-                ArmorItem.Type.HELMET,
-                new Item.Properties().durability(ArmorItem.Type.HELMET.getDurability(15))
+    public static final DeferredItem<HammerItem> IRON_HAMMER = ModItems.ITEMS.register(
+            "iron_hammer",
+            () -> new HammerItem(
+                    Tiers.IRON,
+                    new Item.Properties().attributes(
+                            HammerItem.createAttributes(
+                                    Tiers.IRON,
+                                    setAttackDamage(4.0f),
+                                    setAttackSpeed(0.4f)
+                            )
+                    )
             )
     );
 
-    public static final Supplier<ArmorItem> BRONZE_CHESTPLATE = ITEMS.register(
-            "bronze_chestplate",
+    // Bronze down
+    public static final Tier BRONZE_TIER = new SimpleTier(
+            ModTags.INCORRECT_FOR_BRONZE_TOOL,
+            350,
+            5.0f,
+            1.5f,
+            20,
+            () -> Ingredient.of(BRONZE_INGOT)
+    );
+    public static final ToolSet BRONZE_TOOLS = registerTools(
+            "bronze","Bronze",BRONZE_TIER,
+            5.5f,1.6f,
+            4.0f,1.0f,
+            3.5f,1.2f,
+            9.0f,0.9f,
+            1.0f,2.5f,
+            4.0f,0.6f
+    );
+    public static final Holder<ArmorMaterial> BRONZE_MATERIAL = registerArmorMaterial(
+            "bronze",BRONZE_INGOT,22,
+            2,
+            5,
+            4,
+            3,
+            4
+    );
+    public static final ArmorSet BRONZE_ARMOR = registerArmor(
+            "bronze","Bronze",13,BRONZE_MATERIAL
+    );
+    // Bronze up
+
+    // #################################################################################################################
+
+    // Silver down
+    static float silverFactor = 14.0f;
+    public static final Tier SILVER_TIER = new SimpleTier(
+            ModTags.INCORRECT_FOR_SILVER_TOOL,
+            200,
+            7.0f,
+            2.5f,
+            24,
+            () -> Ingredient.of(SILVER_INGOT)
+    );
+    public static final Holder<ArmorMaterial> SILVER_MATERIAL = registerArmorMaterial(
+            "silver",SILVER_INGOT,25,
+            2,
+            5,
+            4,
+            2,
+            5
+    );
+
+    public static final DeferredItem<SwordItem> SILVER_SWORD = ModItems.ITEMS.register(
+            "silver_sword",
+            () -> new SwordItem(
+                    SILVER_TIER,
+                    new Item.Properties().attributes(
+                            SwordItem.createAttributes(
+                                    SILVER_TIER,
+                                    setSwordAttackDamage(6.0f),
+                                    setAttackSpeed(1.6f)
+                            )
+                    )
+            ) {
+                @Override
+                public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+                    if (target.getType().is(EntityTypeTags.SENSITIVE_TO_SMITE)) {
+                         if (target.isAlive()) target.hurt(attacker.damageSources().magic(),silverFactor);
+                    }
+                    return super.hurtEnemy(stack, target, attacker);
+                }
+            }
+    );
+
+    public static final DeferredItem<ShovelItem> SILVER_SHOVEL = ModItems.ITEMS.register(
+            "silver_shovel",
+            () -> new ShovelItem(
+                    SILVER_TIER,
+                    new Item.Properties().attributes(
+                            ShovelItem.createAttributes(
+                                    SILVER_TIER,
+                                    setAttackDamage(5.0f),
+                                    setAttackSpeed(1.0f)
+                            )
+                    )
+            ) {
+                @Override
+                public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+                    if (target.getType().is(EntityTypeTags.SENSITIVE_TO_SMITE)) {
+                        if (target.isAlive()) target.hurt(attacker.damageSources().magic(),silverFactor);
+                    }
+
+                    return super.hurtEnemy(stack, target, attacker);
+                }
+            }
+    );
+
+    public static final DeferredItem<PickaxeItem> SILVER_PICKAXE = ModItems.ITEMS.register(
+            "silver_pickaxe",
+            () -> new PickaxeItem(
+                    SILVER_TIER,
+                    new Item.Properties().attributes(
+                            PickaxeItem.createAttributes(
+                                    SILVER_TIER,
+                                    setAttackDamage(4.5f),
+                                    setAttackSpeed(1.2f)
+                            )
+                    )
+            ) {
+                @Override
+                public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+                    if (target.getType().is(EntityTypeTags.SENSITIVE_TO_SMITE)) {
+                        if (target.isAlive()) target.hurt(attacker.damageSources().magic(),silverFactor);
+                    }
+
+                    return super.hurtEnemy(stack, target, attacker);
+                }
+            }
+    );
+
+    public static final DeferredItem<AxeItem> SILVER_AXE = ModItems.ITEMS.register(
+            "silver_axe",
+            () -> new AxeItem(
+                    SILVER_TIER,
+                    new Item.Properties().attributes(
+                            AxeItem.createAttributes(
+                                    SILVER_TIER,
+                                    setSwordAttackDamage(9.0f),
+                                    setAttackSpeed(0.9f)
+                            )
+                    )
+            ) {
+                @Override
+                public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+                    if (target.getType().is(EntityTypeTags.SENSITIVE_TO_SMITE)) {
+                        if (target.isAlive()) target.hurt(attacker.damageSources().magic(),silverFactor-10.0f);
+                    }
+
+                    return super.hurtEnemy(stack, target, attacker);
+                }
+            }
+    );
+
+    public static final DeferredItem<HoeItem> SILVER_HOE = ModItems.ITEMS.register(
+            "silver_hoe",
+            () -> new HoeItem(
+                    SILVER_TIER,
+                    new Item.Properties().attributes(
+                            HoeItem.createAttributes(
+                                    SILVER_TIER,
+                                    setSwordAttackDamage(1.0f),
+                                    setAttackSpeed(2.5f)
+                            )
+                    )
+            ) {
+                @Override
+                public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+                    if (target.getType().is(EntityTypeTags.SENSITIVE_TO_SMITE)) {
+                        if (target.isAlive()) target.hurt(attacker.damageSources().magic(),silverFactor);
+                    }
+
+                    return super.hurtEnemy(stack, target, attacker);
+                }
+            }
+    );
+
+    public static final DeferredItem<HammerItem> SILVER_HAMMER = ModItems.ITEMS.register(
+            "silver_hammer",
+            () -> new HammerItem(
+                    SILVER_TIER,
+                    new Item.Properties().attributes(
+                            HammerItem.createAttributes(
+                                    SILVER_TIER,
+                                    setAttackDamage(5.0f),
+                                    setAttackSpeed(0.6f)
+                            )
+                    )
+            ) {
+                @Override
+                public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+                    if (target.getType().is(EntityTypeTags.SENSITIVE_TO_SMITE)) {
+                        if (target.isAlive()) target.hurt(attacker.damageSources().magic(),silverFactor);
+                    }
+
+                    return super.hurtEnemy(stack, target, attacker);
+                }
+            }
+    );
+
+    public static final ToolSet SILVER_TOOLS = new ToolSet(
+            SILVER_SWORD,"silver_sword","Silver Sword",
+            SILVER_SHOVEL,"silver_shovel", "Silver Shovel",
+            SILVER_PICKAXE, "silver_pickaxe", "Silver Pickaxe",
+            SILVER_AXE, "silver_axe", "Silver Axe",
+            SILVER_HOE, "silver_hoe", "Silver Hoe",
+            SILVER_HAMMER, "silver_hammer", "Silver Hammer"
+    );
+
+    public static final DeferredItem<ArmorItem> SILVER_HELMET = ModItems.ITEMS.register(
+            "silver_helmet",
             () -> new ArmorItem(
-                    BRONZE_ARMOR_MATERIAL,
+                    SILVER_MATERIAL,
+                    ArmorItem.Type.HELMET,
+                    new Item.Properties().durability(ArmorItem.Type.HELMET.getDurability(15))
+            )
+    );
+
+    public static final DeferredItem<ArmorItem> SILVER_CHESTPLATE = ModItems.ITEMS.register(
+            "silver_chestplate",
+            () -> new ArmorItem(
+                    SILVER_MATERIAL,
                     ArmorItem.Type.CHESTPLATE,
                     new Item.Properties().durability(ArmorItem.Type.CHESTPLATE.getDurability(15))
             )
     );
 
-    public static final Supplier<ArmorItem> BRONZE_LEGGINGS = ITEMS.register(
-            "bronze_leggings",
+    public static final DeferredItem<ArmorItem> SILVER_LEGGINGS = ModItems.ITEMS.register(
+            "silver_leggings",
             () -> new ArmorItem(
-                    BRONZE_ARMOR_MATERIAL,
+                    SILVER_MATERIAL,
                     ArmorItem.Type.LEGGINGS,
                     new Item.Properties().durability(ArmorItem.Type.LEGGINGS.getDurability(15))
             )
     );
 
-    public static final Supplier<ArmorItem> BRONZE_BOOTS = ITEMS.register(
-            "bronze_boots",
+    public static final DeferredItem<ArmorItem> SILVER_BOOTS = ModItems.ITEMS.register(
+            "silver_boots",
             () -> new ArmorItem(
-                    BRONZE_ARMOR_MATERIAL,
+                    SILVER_MATERIAL,
                     ArmorItem.Type.BOOTS,
                     new Item.Properties().durability(ArmorItem.Type.BOOTS.getDurability(15))
             )
     );
+
+    public static final ArmorSet SILVER_ARMOR = new ArmorSet(
+            SILVER_HELMET,"silver_helmet","Silver Helmet",
+            SILVER_CHESTPLATE,"silver_chestplate","Silver Chestplate",
+            SILVER_LEGGINGS,"silver_leggings","Silver Leggings",
+            SILVER_BOOTS,"silver_boots","Silver Boots"
+    );
     //
+    // Silver up
+    // #################################################################################################################
+
+    // Invar
+    public static final Tier INVAR_TIER = new SimpleTier(
+            ModTags.INCORRECT_FOR_INVAR_TOOL,
+            600,
+            4.0f,
+            1.0f,
+            18,
+            () -> Ingredient.of(INVAR_INGOT)
+    );
+    public static final Holder<ArmorMaterial> INVAR_MATERIAL = registerArmorMaterial(
+            "invar",INVAR_INGOT,18,
+            3,
+            5,
+            4,
+            2,
+            6
+    );
+    public static final ToolSet INVAR_TOOLS = registerTools(
+            "invar","Invar",INVAR_TIER,
+            5.0f,1.6f,
+            5.0f,1.0f,
+            4.0f,1.2f,
+            9.0f,0.9f,
+            2.0f,2.5f,
+            3.0f,0.6f
+    );
+    public static final ArmorSet INVAR_ARMOR = registerArmor(
+            "invar","Invar",22,INVAR_MATERIAL
+    );
 
     public static void register(IEventBus eventBus) {
+        registeredToolSets.add(SILVER_TOOLS);
+        registeredArmorSets.add(SILVER_ARMOR);
+
         ITEMS.register(eventBus);
         ARMOR_MATERIALS.register(eventBus);
-    }
-
-    public static float setAttackSpeed(float attackSpeed) {
-        return -(4.0f - attackSpeed);
-    }
-
-    public static float setAttackDamage(float attackDamage) {
-        return -(2.5f - attackDamage);
     }
 }

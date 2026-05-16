@@ -10,9 +10,11 @@ import net.minecraft.world.entity.player.Inventory;
 public class AlloyingSmelterScreen extends AbstractContainerScreen<AlloyingSmelterMenu> {
     public AlloyingSmelterScreen(AlloyingSmelterMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
+
+        this.inventoryLabelY += 10;
     }
 
-    String label = "Alloying Smelter";
+    String label = Component.translatable("block.toolprogressionoverhaul.alloying_smelter_block").getString();
     int labelX = 0;
     int labelY = 0;
 
@@ -40,30 +42,30 @@ public class AlloyingSmelterScreen extends AbstractContainerScreen<AlloyingSmelt
 
             graphics.blit(BURN_PROGRESS,
                     this.leftPos + 144, // X position on screen
-                    this.topPos + 31 + (14-fuelHeight), // Y position (moves up as it fills)
+                    this.topPos + 42 + (14-fuelHeight), // Y position (moves up as it fills)
                     0,(14-fuelHeight),
                     14,fuelHeight,
                     14,14
             );
         }
 
-        // 3. Draw the Progress Arrow (Animated from left to right)
-        int progressHeight = menu.getScaledProgress();
+        int progressHeightMID = menu.getScaledProgressMID();
+        int progressHeightSIDES = menu.getScaledProgressSIDES();
         graphics.blit(ALLOYING_PROGRESS_MIDDLE_LOCATION,
-                this.leftPos + 80, // X position on screen
-                this.topPos + 32, // Y position on screen
+                this.leftPos+80, // X position on screen
+                this.topPos+43, // Y position on screen
                 80, // U: The X coordinate on the texture file
-                32, // V: The Y coordinate on the texture file
-                256, // Width (calculated scaled value)
-                (int) (progressHeight / 2.2f) // Height
+                43, // V: The Y coordinate on the texture file
+                96, // Width
+                progressHeightMID// Height
         );
         graphics.blit(ALLOYING_PROGRESS_SIDES_LOCATION,
-                this.leftPos + 43, // X position on screen
-                this.topPos + 32, // Y position on screen
+                this.leftPos+43, // X position on screen
+                this.topPos+43, // Y position on screen
                 43, // U: The X coordinate on the texture file
-                32, // V: The Y coordinate on the texture file
-                256, // Width (calculated scaled value)
-                progressHeight // Height
+                43, // V: The Y coordinate on the texture file
+                133, // Width
+                progressHeightSIDES  // Height
         );
 
         this.renderTooltip(graphics, mouseX, mouseY);
@@ -78,7 +80,7 @@ public class AlloyingSmelterScreen extends AbstractContainerScreen<AlloyingSmelt
          * 'imageWidth' and 'imageHeight'. The two zeros represent the
          * integer u/v coordinates inside the 256 x 256 PNG file.
          */
-        guiGraphics.blit(BACKGROUND_LOCATION, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
+        guiGraphics.blit(BACKGROUND_LOCATION, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight+11, 256, 256);
     }
 
     @Override
@@ -87,8 +89,10 @@ public class AlloyingSmelterScreen extends AbstractContainerScreen<AlloyingSmelt
 
         // Assume we have some Component 'label'
         // 'label' is drawn at 'labelX' and 'labelY'
-        graphics.drawString(this.font, String.valueOf(menu.getProgress()), this.labelX+25, this.labelY+50, 0x404040);
-        graphics.drawString(this.font, String.valueOf(menu.getFuelCapacity()), this.labelX+25, this.labelY+60, 0x404040);
+        // DEBUG TEXT BELOW :
+//        graphics.drawString(this.font, String.valueOf(menu.blockEntity.maxProgress), this.labelX+25, this.labelY+40, 0x404040);
+//        graphics.drawString(this.font, String.valueOf(menu.getProgress()), this.labelX+25, this.labelY+50, 0x404040);
+//        graphics.drawString(this.font, String.valueOf(menu.getFuelCapacity()), this.labelX+25, this.labelY+60, 0x404040);
     }
 
     @Override

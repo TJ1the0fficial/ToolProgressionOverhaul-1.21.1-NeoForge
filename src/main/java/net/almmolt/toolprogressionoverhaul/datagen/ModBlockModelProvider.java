@@ -3,9 +3,8 @@ package net.almmolt.toolprogressionoverhaul.datagen;
 import net.almmolt.toolprogressionoverhaul.ToolProgressionOverhaul;
 import net.almmolt.toolprogressionoverhaul.block.ModBlocks;
 import net.almmolt.toolprogressionoverhaul.block.custom.alloyingsmelter.AlloyingSmelterEntityBlock;
-import net.minecraft.core.Direction;
+import net.almmolt.toolprogressionoverhaul.util.AmmoltUtilities.AMblock;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
@@ -18,17 +17,9 @@ public class ModBlockModelProvider extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-        simpleBlockWithItem(ModBlocks.TIN_ORE.get(),cubeAll(ModBlocks.TIN_ORE.get()));
-        simpleBlockWithItem(ModBlocks.DEEPSLATE_TIN_ORE.get(),cubeAll(ModBlocks.DEEPSLATE_TIN_ORE.get()));
-        simpleBlockWithItem(ModBlocks.TIN_BLOCK.get(),cubeAll(ModBlocks.TIN_BLOCK.get()));
-        simpleBlockWithItem(ModBlocks.RAW_TIN_BLOCK.get(),cubeAll(ModBlocks.RAW_TIN_BLOCK.get()));
-        simpleBlockWithItem(ModBlocks.BRONZE_BLOCK.get(),cubeAll(ModBlocks.BRONZE_BLOCK.get()));
-//        horizontalBlock(
-//                ModBlocks.ALLOYING_SMELTER.get(),
-//                ResourceLocation.fromNamespaceAndPath(ToolProgressionOverhaul.MODID, "block/alloying_smelter_sides"),
-//                ResourceLocation.fromNamespaceAndPath(ToolProgressionOverhaul.MODID, "block/alloying_smelter_front"),
-//                ResourceLocation.fromNamespaceAndPath(ToolProgressionOverhaul.MODID, "block/alloying_smelter_top")
-//        );
+        for (AMblock.BlockSet blockSet : AMblock.registeredBlocks) {
+            simpleBlockWithItem(blockSet.block().get(),cubeAll(blockSet.block().get()));
+        }
         // 1. Create the "Off" model
         ModelFile offModel = models().orientable("alloying_smelter",
                 modLoc("block/alloying_smelter_sides"),
@@ -47,5 +38,14 @@ public class ModBlockModelProvider extends BlockStateProvider {
         );
 
         simpleBlockItem(ModBlocks.ALLOYING_SMELTER.get(),offModel);
+
+        // CRUSHER
+        ModelFile crusherModel = models().cubeBottomTop("crusher",
+                modLoc("block/crusher_side"),
+                modLoc("block/crusher_bottom"),
+                modLoc("block/crusher_top")
+        );
+        horizontalBlock(ModBlocks.CRUSHER.get(), crusherModel);
+        simpleBlockItem(ModBlocks.CRUSHER.get(), crusherModel);
     }
 }

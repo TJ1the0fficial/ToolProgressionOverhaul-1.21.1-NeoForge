@@ -1,6 +1,7 @@
 package net.almmolt.toolprogressionoverhaul.datagen;
 
 import net.almmolt.toolprogressionoverhaul.ToolProgressionOverhaul;
+import net.almmolt.toolprogressionoverhaul.block.custom.alloyingsmelter.AlloyingRecipeProvider;
 import net.almmolt.toolprogressionoverhaul.tag.ModBlockTagsProvider;
 import net.almmolt.toolprogressionoverhaul.tag.ModItemTagsProvider;
 import net.minecraft.core.HolderLookup;
@@ -35,6 +36,7 @@ public class DataGenerators {
         generator.addProvider(event.includeServer(), new ModRecipeProvider(packOutput,lookupProvider));
         generator.addProvider(event.includeServer(), new en_us_ModLanguageProvider(packOutput));
         generator.addProvider(event.includeServer(), new ModWorldGenProvider(packOutput, lookupProvider));
+//        generator.addProvider(event.includeServer(), new AlloyingRecipeProvider(packOutput,lookupProvider));
 
         // AI Code Ah, NeoForge site didn't mention how to get contentsGetter()
         // 1. Create the BlockTagsProvider and store it in a variable

@@ -24,14 +24,14 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
     // The parameter is provided by the lambda in the LootTableProvider's constructor.
     public ModBlockLootTableProvider(HolderLookup.Provider lookupProvider) {
         // The first parameter is a set of blocks we are creating loot tables for. Instead of hardcoding,
-        // we use our block registry and just pass an empty set here.
+        // we use our AMblock registry and just pass an empty set here.
         // The second parameter is the feature flag set, this will be the default flags
         // unless you are adding custom flags (which is beyond the scope of this article).
         super(Set.of(), FeatureFlags.DEFAULT_FLAGS, lookupProvider);
     }
 
     // The contents of this Iterable are used for validation.
-    // We return an Iterable over our block registry's values here.
+    // We return an Iterable over our AMblock registry's values here.
     @Override
     protected Iterable<Block> getKnownBlocks() {
         // The contents of our DeferredRegister.
@@ -44,14 +44,28 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
 
     @Override
     protected void generate() {
-        add(ModBlocks.TIN_ORE.get(),
-                createCustomOreDrops(ModBlocks.TIN_ORE.get(),ModItems.RAW_TIN.get(),1,3));
-        add(ModBlocks.DEEPSLATE_TIN_ORE.get(),
-                createCustomOreDrops(ModBlocks.DEEPSLATE_TIN_ORE.get(),ModItems.RAW_TIN.get(),1,5));
-        dropSelf(ModBlocks.TIN_BLOCK.get());
-        dropSelf(ModBlocks.RAW_TIN_BLOCK.get());
-        dropSelf(ModBlocks.BRONZE_BLOCK.get());
+        add(ModBlocks.TIN_ORE.block().get(),
+                createCustomOreDrops(ModBlocks.TIN_ORE.block().get(),ModItems.RAW_TIN.get(),1,3));
+        add(ModBlocks.DEEPSLATE_TIN_ORE.block().get(),
+                createCustomOreDrops(ModBlocks.DEEPSLATE_TIN_ORE.block().get(),ModItems.RAW_TIN.get(),1,5));
+        dropSelf(ModBlocks.TIN_BLOCK.block().get());
+        dropSelf(ModBlocks.RAW_TIN_BLOCK.block().get());
+        dropSelf(ModBlocks.BRONZE_BLOCK.block().get());
         dropSelf(ModBlocks.ALLOYING_SMELTER.get());
+        dropSelf(ModBlocks.NICKEL_BLOCK.block().get());
+        dropSelf(ModBlocks.RAW_NICKEL_BLOCK.block().get());
+        dropSelf(ModBlocks.SILVER_BLOCK.block().get());
+        dropSelf(ModBlocks.RAW_SILVER_BLOCK.block().get());
+        dropSelf(ModBlocks.INVAR_BLOCK.block().get());
+        dropSelf(ModBlocks.CRUSHER.get());
+        add(ModBlocks.NICKEL_ORE.block().get(),
+                createCustomOreDrops(ModBlocks.NICKEL_ORE.block().get(),ModItems.RAW_NICKEL.get(),1,1));
+        add(ModBlocks.DEEPSLATE_NICKEL_ORE.block().get(),
+                createCustomOreDrops(ModBlocks.DEEPSLATE_NICKEL_ORE.block().get(),ModItems.RAW_NICKEL.get(),1,1));
+        add(ModBlocks.SILVER_ORE.block().get(),
+                createCustomOreDrops(ModBlocks.SILVER_ORE.block().get(),ModItems.RAW_SILVER.get(),1,1));
+        add(ModBlocks.DEEPSLATE_SILVER_ORE.block().get(),
+                createCustomOreDrops(ModBlocks.DEEPSLATE_SILVER_ORE.block().get(),ModItems.RAW_SILVER.get(),1,3));
     }
 
     public LootTable.Builder createCustomOreDrops(Block block, Item item , float min, float max) {

@@ -1,11 +1,20 @@
 package net.almmolt.toolprogressionoverhaul.datagen;
 
 import net.almmolt.toolprogressionoverhaul.ToolProgressionOverhaul;
-import net.almmolt.toolprogressionoverhaul.block.ModBlocks;
 import net.almmolt.toolprogressionoverhaul.item.ModItems;
+import net.almmolt.toolprogressionoverhaul.util.AmmoltUtilities.AMarmor;
+import net.almmolt.toolprogressionoverhaul.util.AmmoltUtilities.AMtool;
 import net.minecraft.data.PackOutput;
+import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.registries.DeferredItem;
+
+import java.util.function.Supplier;
+
+import static net.almmolt.toolprogressionoverhaul.util.AmmoltUtilities.AMarmor.registeredArmorSets;
+import static net.almmolt.toolprogressionoverhaul.util.AmmoltUtilities.AMsimpleItem.registeredItems;
+import static net.almmolt.toolprogressionoverhaul.util.AmmoltUtilities.AMtool.registeredToolSets;
 
 public class ModItemModelProvider extends ItemModelProvider {
     public ModItemModelProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
@@ -14,19 +23,23 @@ public class ModItemModelProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        basicItem(ModItems.TIN_INGOT.get());
-        basicItem(ModItems.RAW_TIN.get());
-        basicItem(ModItems.BRONZE_INGOT.get());
+        for (Supplier<Item> item : registeredItems.keySet()) {
+            basicItem(item.get());
+        }
 
-        handheldItem(ModItems.BRONZE_SWORD.get());
-        handheldItem(ModItems.BRONZE_AXE.get());
-        handheldItem(ModItems.BRONZE_PICKAXE.get());
-        handheldItem(ModItems.BRONZE_SHOVEL.get());
-        handheldItem(ModItems.BRONZE_HOE.get());
+        for (AMtool.ToolSet toolSet : registeredToolSets) {
+            for (DeferredItem<? extends Item> tool : toolSet.asList()) {
+                handheldItem(tool.get());
+            }
+        }
 
-        basicItem(ModItems.BRONZE_HELMET.get());
-        basicItem(ModItems.BRONZE_CHESTPLATE.get());
-        basicItem(ModItems.BRONZE_LEGGINGS.get());
-        basicItem(ModItems.BRONZE_BOOTS.get());
+        handheldItem(ModItems.IRON_HAMMER.get());
+
+        for (AMarmor.ArmorSet armorSet : registeredArmorSets) {
+            basicItem(armorSet.helmetItem().get());
+            basicItem(armorSet.chestplateItem().get());
+            basicItem(armorSet.leggingsItem().get());
+            basicItem(armorSet.bootsItem().get());
+        }
     }
 }

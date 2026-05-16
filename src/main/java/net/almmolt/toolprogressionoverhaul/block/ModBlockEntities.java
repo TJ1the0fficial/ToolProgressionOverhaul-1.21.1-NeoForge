@@ -2,8 +2,11 @@ package net.almmolt.toolprogressionoverhaul.block;
 
 import net.almmolt.toolprogressionoverhaul.ToolProgressionOverhaul;
 import net.almmolt.toolprogressionoverhaul.block.custom.alloyingsmelter.AlloyingSmelterBlockEntity;
+import net.almmolt.toolprogressionoverhaul.block.custom.crusher.CrusherBlockEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -18,6 +21,15 @@ public class ModBlockEntities {
             () -> BlockEntityType.Builder.of(
                     AlloyingSmelterBlockEntity::new,
                     ModBlocks.ALLOYING_SMELTER.get()
+            )
+            .build(null)
+    );
+
+    public static final Supplier<BlockEntityType<CrusherBlockEntity>> CRUSHER_BLOCK_ENTITY = BLOCK_ENTITY_TYPES.register(
+            "crusher_block_entity",
+            () -> BlockEntityType.Builder.of(
+                    CrusherBlockEntity::new,
+                    ModBlocks.CRUSHER.get()
             )
             .build(null)
     );

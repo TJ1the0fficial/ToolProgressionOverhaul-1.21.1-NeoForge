@@ -53,7 +53,7 @@ public class AlloyingSmelterEntityBlock extends Block implements EntityBlock {
     public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
         return new SimpleMenuProvider(
                 (containerId, playerInventory, player) -> new AlloyingSmelterMenu(containerId, playerInventory, (AlloyingSmelterBlockEntity) newBlockEntity(pos,state)),
-                Component.literal("Alloying Smelter"));
+                Component.translatable("block.toolprogressionoverhaul.alloying_smelter_block"));
     }
 
     @Override
@@ -65,7 +65,7 @@ public class AlloyingSmelterEntityBlock extends Block implements EntityBlock {
                 // This sends the position to the client automatically.
                 serverPlayer.openMenu(new SimpleMenuProvider(
                         (id, inv, p) -> new AlloyingSmelterMenu(id, inv, smelterBE),
-                        Component.literal("Alloying Smelter")), pos);
+                        Component.translatable("block.toolprogressionoverhaul.alloying_smelter_block")), pos);
             }
         }
         return InteractionResult.sidedSuccess(level.isClientSide);
@@ -73,8 +73,8 @@ public class AlloyingSmelterEntityBlock extends Block implements EntityBlock {
 
     @Override
     protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
-        // 1. Check if the block is actually being replaced by a DIFFERENT block
-        // (This prevents items from dropping if you just rotate the block)
+        // 1. Check if the AMblock is actually being replaced by a DIFFERENT AMblock
+        // (This prevents items from dropping if you just rotate the AMblock)
         if (!state.is(newState.getBlock())) {
             BlockEntity be = level.getBlockEntity(pos);
             if (be instanceof AlloyingSmelterBlockEntity smelterBE) {
@@ -109,13 +109,13 @@ public class AlloyingSmelterEntityBlock extends Block implements EntityBlock {
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         // .getHorizontalDirection() is the way the player is looking.
-        // .getOpposite() makes the "front" of the block face the player.
+        // .getOpposite() makes the "front" of the AMblock face the player.
         return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        // This tells Minecraft that this block is allowed to have a 'facing' property
+        // This tells Minecraft that this AMblock is allowed to have a 'facing' property
         builder.add(FACING, LIT);
     }
 
