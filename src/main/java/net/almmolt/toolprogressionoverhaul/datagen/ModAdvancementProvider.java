@@ -33,7 +33,6 @@ public class ModAdvancementProvider extends AdvancementProvider {
                     null // Passing null here to trigger the root placeholder logic
             );
 
-            // 2. Pass the 'root' holder as the parent
             AdvancementHolder tinIngot = createTask(
                     saver, existingFileHelper,
                     "tin_ingot",
@@ -41,26 +40,25 @@ public class ModAdvancementProvider extends AdvancementProvider {
                     root
             );
 
-            // 3. Pass the 'tinIngot' holder as the parent
+            AdvancementHolder stoneHammer = createTask(
+                    saver, existingFileHelper,
+                    "stone_hammer",
+                    ModItems.STONE_HAMMER.get(),
+                    root
+            );
+
             AdvancementHolder bronzeIngot = createTask(
                     saver, existingFileHelper,
                     "bronze_ingot",
                     ModItems.BRONZE_INGOT.get(),
-                    tinIngot
-            );
-
-            AdvancementHolder bronzeHammer = createTask(
-                    saver, existingFileHelper,
-                    "bronze_hammer",
-                    ModItems.BRONZE_TOOLS.hammerItem().get(),
-                    bronzeIngot
+                    stoneHammer
             );
 
             AdvancementHolder alloyingSmelter = createTask(
                     saver, existingFileHelper,
                     "alloying_smelter",
                     ModBlocks.ALLOYING_SMELTER_ASITEM.get(),
-                    bronzeHammer
+                    bronzeIngot
             );
 
             AdvancementHolder ironIngot = createTask(

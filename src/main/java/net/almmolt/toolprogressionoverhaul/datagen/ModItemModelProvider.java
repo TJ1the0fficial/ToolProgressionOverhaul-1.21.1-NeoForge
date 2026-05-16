@@ -34,6 +34,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         }
 
         handheldItem(ModItems.IRON_HAMMER.get());
+        handheldItem(ModItems.STONE_HAMMER.get());
 
         for (AMarmor.ArmorSet armorSet : registeredArmorSets) {
             basicItem(armorSet.helmetItem().get());

@@ -243,6 +243,7 @@ public class ToolProgressionOverhaul {
 //        }
         else if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
             insertAfter(event,Items.IRON_HOE,ModItems.IRON_HAMMER.get());
+            insertAfter(event,Items.STONE_HOE,ModItems.STONE_HAMMER.get());
         }
     }
 

@@ -9,6 +9,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -104,15 +105,29 @@ public class ModItemTagsProvider extends ItemTagsProvider {
         }
 
         tag(ItemTags.PICKAXES)
+                .add(ModItems.STONE_HAMMER.get())
                 .add(ModItems.IRON_HAMMER.get());
         tag(Tags.Items.MINING_TOOL_TOOLS)
+                .add(ModItems.STONE_HAMMER.get())
                 .add(ModItems.IRON_HAMMER.get());
         tag(ModTags.TPO_ITEMS)
+                .add(ModItems.STONE_HAMMER.get())
                 .add(ModItems.IRON_HAMMER.get());
         tag(ModTags.HAMMERS)
+                .add(ModItems.STONE_HAMMER.get())
                 .add(ModItems.IRON_HAMMER.get());
 
         tag(ModTags.INCORRECT_FOR_CRUSHER)
                 .addTag(ModTags.CRUSHING_WHEELS);
+
+        tag(ModTags.STONES)
+                .add(Items.STONE)
+                .add(Items.BLACKSTONE)
+                .add(Items.SMOOTH_BASALT)
+                .add(Items.RED_SANDSTONE)
+                .add(Items.SANDSTONE)
+                .add(Items.POLISHED_ANDESITE)
+                .add(Items.POLISHED_DIORITE)
+                .add(Items.POLISHED_GRANITE);
     }
 }

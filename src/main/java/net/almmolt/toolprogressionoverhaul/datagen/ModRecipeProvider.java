@@ -147,6 +147,63 @@ public class ModRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_iron_ingot", has(Items.IRON_INGOT))
                 .save(output);
 
+        // stone tools below
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.STONE_HAMMER)
+                .pattern("BKB")
+                .pattern("BSB")
+                .pattern(" S ")
+                .define('B', ModTags.STONES)
+                .define('S', Items.STICK)
+                .define('K', Items.SMOOTH_STONE)
+                .unlockedBy("has_stone", has(Items.STONE))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.STONE_SHOVEL)
+                .pattern(" B ")
+                .pattern(" S ")
+                .pattern(" S ")
+                .define('B', ModTags.STONES)
+                .define('S', Items.STICK)
+                .unlockedBy("has_stone", has(Items.STONE))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.STONE_PICKAXE)
+                .pattern("BBB")
+                .pattern(" S ")
+                .pattern(" S ")
+                .define('B', ModTags.STONES)
+                .define('S', Items.STICK)
+                .unlockedBy("has_stone", has(Items.STONE))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.STONE_AXE)
+                .pattern("BB ")
+                .pattern("BS ")
+                .pattern(" S ")
+                .define('B', ModTags.STONES)
+                .define('S', Items.STICK)
+                .unlockedBy("has_stone", has(Items.STONE))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.STONE_HOE)
+                .pattern("BB ")
+                .pattern(" S ")
+                .pattern(" S ")
+                .define('B', ModTags.STONES)
+                .define('S', Items.STICK)
+                .unlockedBy("has_stone", has(Items.STONE))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.STONE_SWORD)
+                .pattern(" B ")
+                .pattern(" B ")
+                .pattern(" S ")
+                .define('B', ModTags.STONES)
+                .define('S', Items.STICK)
+                .unlockedBy("has_stone", has(Items.STONE))
+                .save(output);
+        // stone tools above
+
         new AlloyingRecipeBuilder(new ItemStack(ModItems.INVAR_INGOT.get(),3))
                 .addInput(ModItems.IRON_DUST.get(),2)
                 .addInput(ModItems.NICKEL_DUST.get(),1)

@@ -77,4 +77,9 @@ public class ModTags {
             Registries.ITEM,
             ResourceLocation.fromNamespaceAndPath(ToolProgressionOverhaul.MODID, "incorrect_for_crusher")
     );
+
+    public static final TagKey<Item> STONES = TagKey.create(
+            Registries.ITEM,
+            ResourceLocation.fromNamespaceAndPath(ToolProgressionOverhaul.MODID, "stones")
+    );
 }

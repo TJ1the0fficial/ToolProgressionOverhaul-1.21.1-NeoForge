@@ -46,6 +46,7 @@ public class en_us_ModLanguageProvider extends LanguageProvider {
             addItem(toolSet.hammerItem(), toolSet.hammerDisplayName());
         }
         addItem(ModItems.IRON_HAMMER, "Iron Hammer");
+        addItem(ModItems.STONE_HAMMER, "Stone Hammer");
 
         // - Armors
         for (AMarmor.ArmorSet armorSet : registeredArmorSets) {
@@ -69,11 +70,11 @@ public class en_us_ModLanguageProvider extends LanguageProvider {
         add(setId_T("tin_ingot"),"Obtained Tin Ingot");
         add(setId_D("tin_ingot"),"Obtain Tin Ingot.");
 
+        add(setId_T("stone_hammer"),"Hammering Time!");
+        add(setId_D("stone_hammer"),"Craft dust forms of materials with the Hammer to double the gain! Hammers are also capable of mining in a 3x3 tile radius!");
+
         add(setId_T("bronze_ingot"),"Our first alloy!");
         add(setId_D("bronze_ingot"),"Combine Tin and Copper. 3 Copper and 1 Tin");
-
-        add(setId_T("bronze_hammer"),"Hammering Time!");
-        add(setId_D("bronze_hammer"),"Craft dust forms of materials with the Hammer to double the gain! Hammers are also capable of mining in a 3x3 tile radius!");
 
         add(setId_T("alloying_smelter"),"Now let's get to Alloying!");
         add(setId_D("alloying_smelter"),"Craft an Alloying Smelter.");

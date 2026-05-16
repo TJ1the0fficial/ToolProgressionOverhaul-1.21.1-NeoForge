@@ -64,6 +64,20 @@ public class ModItems {
             )
     );
 
+    public static final DeferredItem<HammerItem> STONE_HAMMER = ModItems.ITEMS.register(
+            "stone_hammer",
+            () -> new HammerItem(
+                    Tiers.STONE,
+                    new Item.Properties().attributes(
+                            HammerItem.createAttributes(
+                                    Tiers.STONE,
+                                    setAttackDamage(4.0f),
+                                    setAttackSpeed(0.7f)
+                            )
+                    )
+            )
+    );
+
     // Bronze down
     public static final Tier BRONZE_TIER = new SimpleTier(
             ModTags.INCORRECT_FOR_BRONZE_TOOL,

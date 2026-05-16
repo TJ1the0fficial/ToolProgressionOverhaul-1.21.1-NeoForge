@@ -62,7 +62,7 @@ public class ModWorldGenProvider extends DatapackBuiltinEntriesProvider {
                 OreConfiguration.target(deepslateReplaceables, ModBlocks.DEEPSLATE_SILVER_ORE.block().get().defaultBlockState()));
 
         // Register them with their OWN targets
-        context.register(ModConfiguredFeatures.TIN_ORE_KEY, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(tinTargets, 9)));
+        context.register(ModConfiguredFeatures.TIN_ORE_KEY, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(tinTargets, 14)));
         context.register(ModConfiguredFeatures.NICKEL_ORE_KEY, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(nickelTargets, 9)));
         context.register(ModConfiguredFeatures.SILVER_ORE_KEY, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(silverTargets, 8)));
     }
@@ -76,7 +76,7 @@ public class ModWorldGenProvider extends DatapackBuiltinEntriesProvider {
                 List.of(
                         CountPlacement.of(10), // 10 veins per chunk
                         InSquarePlacement.spread(), // Random X/Z
-                        HeightRangePlacement.uniform(VerticalAnchor.absolute(-64), VerticalAnchor.absolute(32)), // Y level
+                        HeightRangePlacement.uniform(VerticalAnchor.absolute(-64), VerticalAnchor.absolute(80)), // Y level
                         BiomeFilter.biome() // Only in valid biomes
                 )
         ));
