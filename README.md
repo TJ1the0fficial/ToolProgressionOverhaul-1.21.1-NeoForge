@@ -11,6 +11,6 @@
 
 ## Plans:
 - [x] Add Bronze Tools and Armor
-- [ ] Plan progression roadmap
+- [X] Plan progression roadmap
 - [ ] Add all tool and armor to the game
-- [ ] Rework what pickaxe can mine what
+- [X] Rework what pickaxe can mine what
