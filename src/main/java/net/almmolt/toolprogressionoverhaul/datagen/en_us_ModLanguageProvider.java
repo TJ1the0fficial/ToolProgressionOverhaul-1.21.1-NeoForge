@@ -31,6 +31,11 @@ public class en_us_ModLanguageProvider extends LanguageProvider {
 
     @Override
     protected void addTranslations() {
+        // compat
+        // - Jade
+        add("config.jade.plugin_toolprogressionoverhaul.crusher_progress","Crusher's Progress");
+        add(ToolProgressionOverhaul.MODID+".crusher_progress","Progress : %d percent");
+
         // Items
         for (Supplier<Item> item : registeredItems.keySet()) {
             addItem(item, registeredItems.get(item));
@@ -96,6 +101,18 @@ public class en_us_ModLanguageProvider extends LanguageProvider {
 
         add(setId_T("crusher_wheels"),"Core component.");
         add(setId_D("crusher_wheels"),"You have to place it in a Crusher. You have to keep in mind that not everything can be crushed with every crusher wheel!");
+
+        add(setId_T("upgrade_wheel"),"New Wheels, new Me!");
+        add(setId_D("upgrade_wheel"),"With new wheels you can crush more stuff!");
+
+        add(setId_T("galvanized_iron"),"Durable");
+        add(setId_D("galvanized_iron"),"Sometimes forget's to take damage.");
+
+        add(setId_T("wootz_steel"),"Our first Steel!");
+        add(setId_D("wootz_steel"),"Fast, durable and hits HARD!");
+
+        add(setId_T("steel"),"The Steel!");
+        add(setId_D("steel"),"That's it for now. This is the end. Get some diamonds!");
     }
 
     public static String setId_T(String title) {

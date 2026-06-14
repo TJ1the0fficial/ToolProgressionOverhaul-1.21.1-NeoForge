@@ -61,10 +61,16 @@ public class ModWorldGenProvider extends DatapackBuiltinEntriesProvider {
                 OreConfiguration.target(stoneReplaceables, ModBlocks.SILVER_ORE.block().get().defaultBlockState()),
                 OreConfiguration.target(deepslateReplaceables, ModBlocks.DEEPSLATE_SILVER_ORE.block().get().defaultBlockState()));
 
+        // ZINC TARGETS
+        List<OreConfiguration.TargetBlockState> zincTargets = List.of(
+                OreConfiguration.target(stoneReplaceables, ModBlocks.ZINC_ORE.block().get().defaultBlockState()),
+                OreConfiguration.target(deepslateReplaceables, ModBlocks.DEEPSLATE_ZINC_ORE.block().get().defaultBlockState()));
+
         // Register them with their OWN targets
         context.register(ModConfiguredFeatures.TIN_ORE_KEY, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(tinTargets, 14)));
         context.register(ModConfiguredFeatures.NICKEL_ORE_KEY, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(nickelTargets, 9)));
         context.register(ModConfiguredFeatures.SILVER_ORE_KEY, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(silverTargets, 8)));
+        context.register(ModConfiguredFeatures.ZINC_ORE_KEY, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(zincTargets, 8)));
     }
 
     // "WHERE" it generates
@@ -74,9 +80,9 @@ public class ModWorldGenProvider extends DatapackBuiltinEntriesProvider {
         context.register(ModPlacedFeatures.TIN_ORE_PLACED_KEY, new PlacedFeature(
                 configuredFeatures.getOrThrow(ModConfiguredFeatures.TIN_ORE_KEY),
                 List.of(
-                        CountPlacement.of(10), // 10 veins per chunk
+                        CountPlacement.of(10), // ores/chunk
                         InSquarePlacement.spread(), // Random X/Z
-                        HeightRangePlacement.uniform(VerticalAnchor.absolute(-64), VerticalAnchor.absolute(80)), // Y level
+                        HeightRangePlacement.uniform(VerticalAnchor.absolute(-20), VerticalAnchor.absolute(80)), // Y level
                         BiomeFilter.biome() // Only in valid biomes
                 )
         ));
@@ -84,7 +90,7 @@ public class ModWorldGenProvider extends DatapackBuiltinEntriesProvider {
         context.register(ModPlacedFeatures.NICKEL_ORE_PLACED_KEY, new PlacedFeature(
                 configuredFeatures.getOrThrow(ModConfiguredFeatures.NICKEL_ORE_KEY),
                 List.of(
-                        CountPlacement.of(5), // 10 veins per chunk
+                        CountPlacement.of(10), // ores/chunk
                         InSquarePlacement.spread(), // Random X/Z
                         HeightRangePlacement.uniform(VerticalAnchor.absolute(-64), VerticalAnchor.absolute(150)), // Y level
                         BiomeFilter.biome() // Only in valid biomes
@@ -94,9 +100,19 @@ public class ModWorldGenProvider extends DatapackBuiltinEntriesProvider {
         context.register(ModPlacedFeatures.SILVER_ORE_PLACED_KEY, new PlacedFeature(
                 configuredFeatures.getOrThrow(ModConfiguredFeatures.SILVER_ORE_KEY),
                 List.of(
-                        CountPlacement.of(3), // 10 veins per chunk
+                        CountPlacement.of(3), // ores/chunk
                         InSquarePlacement.spread(), // Random X/Z
                         HeightRangePlacement.uniform(VerticalAnchor.absolute(-64), VerticalAnchor.absolute(70)), // Y level
+                        BiomeFilter.biome() // Only in valid biomes
+                )
+        ));
+
+        context.register(ModPlacedFeatures.ZINC_ORE_PLACED_KEY, new PlacedFeature(
+                configuredFeatures.getOrThrow(ModConfiguredFeatures.ZINC_ORE_KEY),
+                List.of(
+                        CountPlacement.of(13), // ores/chunk
+                        InSquarePlacement.spread(), // Random X/Z
+                        HeightRangePlacement.uniform(VerticalAnchor.absolute(-64), VerticalAnchor.absolute(30)), // Y level
                         BiomeFilter.biome() // Only in valid biomes
                 )
         ));
@@ -132,6 +148,15 @@ public class ModWorldGenProvider extends DatapackBuiltinEntriesProvider {
                 new BiomeModifiers.AddFeaturesBiomeModifier(
                         biomes.getOrThrow(BiomeTags.IS_OVERWORLD),
                         HolderSet.direct(placedFeatures.getOrThrow(ModPlacedFeatures.SILVER_ORE_PLACED_KEY)),
+                        GenerationStep.Decoration.UNDERGROUND_ORES
+                )
+        );
+
+        context.register(ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS,
+                        ResourceLocation.fromNamespaceAndPath(ToolProgressionOverhaul.MODID, "add_zinc_ore")),
+                new BiomeModifiers.AddFeaturesBiomeModifier(
+                        biomes.getOrThrow(BiomeTags.IS_OVERWORLD),
+                        HolderSet.direct(placedFeatures.getOrThrow(ModPlacedFeatures.ZINC_ORE_PLACED_KEY)),
                         GenerationStep.Decoration.UNDERGROUND_ORES
                 )
         );

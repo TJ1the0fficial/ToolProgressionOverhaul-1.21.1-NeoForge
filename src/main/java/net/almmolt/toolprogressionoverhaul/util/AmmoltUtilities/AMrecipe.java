@@ -1,6 +1,8 @@
 package net.almmolt.toolprogressionoverhaul.util.AmmoltUtilities;
 
+import com.mojang.datafixers.types.templates.Tag;
 import net.almmolt.toolprogressionoverhaul.ToolProgressionOverhaul;
+import net.almmolt.toolprogressionoverhaul.block.custom.alloyingsmelter.AlloyingRecipeBuilder;
 import net.almmolt.toolprogressionoverhaul.block.custom.crusher.CrushingRecipeBuilder;
 import net.almmolt.toolprogressionoverhaul.item.ModItems;
 import net.almmolt.toolprogressionoverhaul.tag.ModTags;
@@ -55,7 +57,7 @@ public class AMrecipe {
         return oI+"_from_"+iI+"_by_"+process;
     }
 
-    public static void craftingRecipe_itemAndBlock(Item item, Block block, RecipeOutput output) {
+    public static void itemAndBlock(Item item, Block block, RecipeOutput output) {
         String itemId = BuiltInRegistries.ITEM.getKey(item).getPath();
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, block.asItem(), 1)
                 .pattern("III")
@@ -71,19 +73,18 @@ public class AMrecipe {
                 .save(output, ResourceLocation.fromNamespaceAndPath(ToolProgressionOverhaul.MODID, itemId+"_crafting_from_block"));
     }
 
-    public static void craftingRecipe_toDust(Supplier<Item> dust, HashMap<Item,Integer> items, RecipeOutput output) {
+    public static void toDust(Supplier<Item> dust, HashMap<Item,Integer> items, RecipeOutput output) {
         for (Item item : items.keySet()) {
             String itemId = BuiltInRegistries.ITEM.getKey(item).getPath();
-            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, dust.get(), items.get(item))
-                    .pattern("HM")
-                    .define('H', ModTags.HAMMERS)
-                    .define('M', item)
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, dust.get(), items.get(item))
+                    .requires(ModTags.HAMMERS)
+                    .requires(item)
                     .unlockedBy(itemId(item), has(item))
                     .save(output,lazyOutput(item,dust.get(),"hammering"));
         }
     }
 
-    public static void craftingRecipe_smeltAndBlast(Item source, Item outcome, RecipeOutput output) {
+    public static void smeltAndBlast(Item source, Item outcome, RecipeOutput output) {
         String itemId = BuiltInRegistries.ITEM.getKey(source).getPath();
         SimpleCookingRecipeBuilder.smelting(
                         Ingredient.of(source),
@@ -105,7 +106,7 @@ public class AMrecipe {
                 .unlockedBy(itemId(source), has(source))
                 .save(output,lazyOutput(source,outcome,"blasting"));
     }
-    public static void craftingRecipe_smeltAndBlast(Item source, Item outcome, Item hasThis,RecipeOutput output) {
+    public static void smeltAndBlast(Item source, Item outcome, Item hasThis,RecipeOutput output) {
         String itemId = BuiltInRegistries.ITEM.getKey(source).getPath();
         SimpleCookingRecipeBuilder.smelting(
                         Ingredient.of(source),
@@ -128,7 +129,7 @@ public class AMrecipe {
                 .save(output,lazyOutput(source,outcome,"blasting"));
     }
     // for dusts
-    public static void craftingRecipe_smeltAndBlast(Item dust, List<Item> fromItems, Item outputItem, RecipeOutput output) {
+    public static void smeltAndBlast(Item dust, List<Item> fromItems, Item outputItem, RecipeOutput output) {
         for (Item inputItem : fromItems) {
             String itemId = BuiltInRegistries.ITEM.getKey(inputItem).getPath();
             SimpleCookingRecipeBuilder.smelting(
@@ -210,7 +211,7 @@ public class AMrecipe {
                 .save(output,lazyOutput(fromItem,toolSet.hammerItem().get(),"crafting"));
     }
 
-    public static void craftingRecipe_Armor(AMarmor.ArmorSet armorSet, Item fromItem, RecipeOutput output) {
+    public static void Armor(AMarmor.ArmorSet armorSet, Item fromItem, RecipeOutput output) {
         String itemId = BuiltInRegistries.ITEM.getKey(fromItem).getPath();
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, armorSet.helmetItem())
                 .pattern("BBB")
@@ -247,11 +248,11 @@ public class AMrecipe {
         String iI = itemId(inputItem);
         String oI = itemId(outputItem);
 
-        for (Supplier<Item> wheel : AMsimpleItem.registeredWheels.keySet()) {
-            String wI = itemId(wheel.get());
+        for (AMsimpleItem.crushingWheel wheel : AMsimpleItem.registeredWheels.keySet()) {
+            String wI = itemId(wheel.item().get());
             new CrushingRecipeBuilder(new ItemStack(outputItem))
                     .setDuration(duration)
-                    .setWheel(wheel.get())
+                    .setWheel(wheel.item().get())
                     .addInput(inputItem)
                     .save(output,oI+"_from_"+iI+"_crushing_with_"+wI);
         }
@@ -262,11 +263,11 @@ public class AMrecipe {
 
         for (Item inputItem : inputItems) {
             String iI = itemId(inputItem);
-            for (Supplier<Item> wheel : AMsimpleItem.registeredWheels.keySet()) {
-                String wI = itemId(wheel.get());
+            for (AMsimpleItem.crushingWheel wheel : AMsimpleItem.registeredWheels.keySet()) {
+                String wI = itemId(wheel.item().get());
                 new CrushingRecipeBuilder(new ItemStack(outputItem))
                         .setDuration(duration)
-                        .setWheel(wheel.get())
+                        .setWheel(wheel.item().get())
                         .addInput(inputItem)
                         .save(output,oI+"_from_"+iI+"_crushing_with_"+wI);
             }
@@ -278,14 +279,113 @@ public class AMrecipe {
 
         for (Item inputItem : inputItems.keySet()) {
             String iI = itemId(inputItem);
-            for (Supplier<Item> wheel : AMsimpleItem.registeredWheels.keySet()) {
-                String wI = itemId(wheel.get());
+            for (AMsimpleItem.crushingWheel wheel : AMsimpleItem.registeredWheels.keySet()) {
+                String wI = itemId(wheel.item().get());
                 new CrushingRecipeBuilder(new ItemStack(outputItem,inputItems.get(inputItem)))
                         .setDuration(duration)
-                        .setWheel(wheel.get())
+                        .setWheel(wheel.item().get())
                         .addInput(inputItem)
                         .save(output,oI+"_from_"+iI+"_crushing_with_"+wI);
             }
         }
+    }
+
+    public static void crushWith(HashMap<AMsimpleItem.crushingWheel, String> wheels, Item inputItem, Item outputItem, int duration, RecipeOutput output) {
+        String oI = itemId(outputItem);
+        String iI = itemId(inputItem);
+
+        for (AMsimpleItem.crushingWheel wheel : wheels.keySet()) {
+
+            String wI = itemId(wheel.item().get());
+            new CrushingRecipeBuilder(new ItemStack(outputItem))
+                    .setDuration(duration)
+                    .setWheel(wheel.item().get())
+                    .addInput(inputItem)
+                    .save(output,oI+"_from_"+iI+"_crushing_with_"+wI);
+        }
+    }
+
+    public static void crushWith(int requiredTier, Item inputItem, Item outputItem, int duration, RecipeOutput output) {
+        String oI = itemId(outputItem);
+        String iI = itemId(inputItem);
+
+        for (AMsimpleItem.crushingWheel wheel : AMsimpleItem.registeredWheels.keySet()) {
+            if (wheel.tier() < requiredTier) continue;
+
+            String wI = itemId(wheel.item().get());
+            new CrushingRecipeBuilder(new ItemStack(outputItem))
+                    .setDuration(duration)
+                    .setWheel(wheel.item().get())
+                    .addInput(inputItem)
+                    .save(output,oI+"_from_"+iI+"_crushing_with_"+wI);
+        }
+    }
+
+    public static void alloyingWithFluxes(Item outputItem, int Oamount, Item input1, int I1amount, Item input2, int I2amount, RecipeOutput output) {
+        String i1I = itemId(input1);
+        String i2I = itemId(input2);
+        String oI = itemId(outputItem);
+
+        String sI = itemId(ModItems.SAND_FLUX_DUST.asItem());
+        String bI = itemId(ModItems.BONE_FLUX_DUST.asItem());
+        String cI = itemId(ModItems.CALCITE_FLUX_DUST.asItem());
+
+        new AlloyingRecipeBuilder(new ItemStack(outputItem,Oamount))
+                .addInput(input1,I1amount)
+                .addInput(input2,I2amount)
+                .addInput(ModItems.SAND_FLUX_DUST.get(),3)
+                .setDuration(200)
+                .unlockedBy("has_"+i1I,has(input1))
+                .save(output,ResourceLocation.fromNamespaceAndPath(ToolProgressionOverhaul.MODID,oI+"_alloying_from_"+i1I+"_and_"+i2I+"_with_"+sI));
+
+        new AlloyingRecipeBuilder(new ItemStack(outputItem,Oamount))
+                .addInput(input1,I1amount)
+                .addInput(input2,I2amount)
+                .addInput(ModItems.BONE_FLUX_DUST.get(),2)
+                .setDuration(200)
+                .unlockedBy("has_"+i1I,has(input1))
+                .save(output,ResourceLocation.fromNamespaceAndPath(ToolProgressionOverhaul.MODID,oI+"_alloying_from_"+i1I+"_and_"+i2I+"_with_"+bI));
+
+        new AlloyingRecipeBuilder(new ItemStack(outputItem,Oamount))
+                .addInput(input1,I1amount)
+                .addInput(input2,I2amount)
+                .addInput(ModItems.CALCITE_FLUX_DUST.get(),1)
+                .setDuration(200)
+                .unlockedBy("has_"+i1I,has(input1))
+                .save(output,ResourceLocation.fromNamespaceAndPath(ToolProgressionOverhaul.MODID,oI+"_alloying_from_"+i1I+"_and_"+i2I+"_with_"+cI));
+    }
+
+    public static void alloyingWithFluxesAndCoke(Item outputItem, int Oamount, Item input1, int I1amount, RecipeOutput output) {
+        String i1I = itemId(input1);
+        String i2I = itemId(ModItems.COKE.asItem());
+        String oI = itemId(outputItem);
+
+        String sI = itemId(ModItems.SAND_FLUX_DUST.asItem());
+        String bI = itemId(ModItems.BONE_FLUX_DUST.asItem());
+        String cI = itemId(ModItems.CALCITE_FLUX_DUST.asItem());
+
+        new AlloyingRecipeBuilder(new ItemStack(outputItem,Oamount))
+                .addInput(input1,I1amount)
+                .addInput(ModItems.COKE.asItem(),3)
+                .addInput(ModItems.SAND_FLUX_DUST.get(),1)
+                .setDuration(200)
+                .unlockedBy("has_"+i1I,has(input1))
+                .save(output,ResourceLocation.fromNamespaceAndPath(ToolProgressionOverhaul.MODID,oI+"_alloying_from_"+i1I+"_and_"+i2I+"_with_"+sI));
+
+        new AlloyingRecipeBuilder(new ItemStack(outputItem,Oamount))
+                .addInput(input1,I1amount)
+                .addInput(ModItems.COKE.asItem(),2)
+                .addInput(ModItems.BONE_FLUX_DUST.get(),1)
+                .setDuration(200)
+                .unlockedBy("has_"+i1I,has(input1))
+                .save(output,ResourceLocation.fromNamespaceAndPath(ToolProgressionOverhaul.MODID,oI+"_alloying_from_"+i1I+"_and_"+i2I+"_with_"+bI));
+
+        new AlloyingRecipeBuilder(new ItemStack(outputItem,Oamount))
+                .addInput(input1,I1amount)
+                .addInput(ModItems.COKE.asItem(),1)
+                .addInput(ModItems.CALCITE_FLUX_DUST.get(),1)
+                .setDuration(200)
+                .unlockedBy("has_"+i1I,has(input1))
+                .save(output,ResourceLocation.fromNamespaceAndPath(ToolProgressionOverhaul.MODID,oI+"_alloying_from_"+i1I+"_and_"+i2I+"_with_"+cI));
     }
 }

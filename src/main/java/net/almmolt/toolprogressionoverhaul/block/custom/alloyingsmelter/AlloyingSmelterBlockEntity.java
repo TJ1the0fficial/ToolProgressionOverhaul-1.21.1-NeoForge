@@ -198,8 +198,7 @@ public class AlloyingSmelterBlockEntity extends BlockEntity{
 
         if (recipe.isPresent()) {
             AlloyingRecipe match = recipe.get().value();
-            // The slots match! You can now check if you can fit the output
-            // or increment your progress bar.
+
             ItemStack result = match.assemble(input, level.registryAccess());
 
             if (match.matches(new AlloyingRecipeInput(slotInput1,slotInput2,slotInput3),level)) {
@@ -219,7 +218,10 @@ public class AlloyingSmelterBlockEntity extends BlockEntity{
 
                 if (blockEntity.fuelCapacity > 0 && blockEntity.progress < blockEntity.maxProgress) {
                     if (    blockEntity.inventory.getStackInSlot(4).isEmpty() ||
-                            blockEntity.inventory.getStackInSlot(4).getCount()+result.getCount() <= blockEntity.inventory.getStackInSlot(4).getMaxStackSize()
+                            (
+                                blockEntity.inventory.getStackInSlot(4).is(result.getItem()) &&
+                                blockEntity.inventory.getStackInSlot(4).getCount()+result.getCount() <= blockEntity.inventory.getStackInSlot(4).getMaxStackSize()
+                            )
                     ) {
                         blockEntity.recipeStarted = true;
                         blockEntity.progress++;

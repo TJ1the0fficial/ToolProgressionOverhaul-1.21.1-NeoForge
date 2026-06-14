@@ -63,6 +63,36 @@ public class ModTags {
             ResourceLocation.withDefaultNamespace("needs_invar_tool")
     );
 
+    // Galvanized Iron
+    public static final TagKey<Block> INCORRECT_FOR_GALVANIZED_IRON_TOOL = TagKey.create(
+            Registries.BLOCK,
+            ResourceLocation.withDefaultNamespace("incorrect_for_galvanized_iron_tool")
+    );
+    public static final TagKey<Block> NEEDS_GALVANIZED_IRON_TOOL = TagKey.create(
+            Registries.BLOCK,
+            ResourceLocation.withDefaultNamespace("needs_galvanized_iron_tool")
+    );
+
+    // Wootz Steel
+    public static final TagKey<Block> INCORRECT_FOR_WOOTZ_STEEL_TOOL = TagKey.create(
+            Registries.BLOCK,
+            ResourceLocation.withDefaultNamespace("incorrect_for_wootz_steel_tool")
+    );
+    public static final TagKey<Block> NEEDS_WOOTZ_STEEL_TOOL = TagKey.create(
+            Registries.BLOCK,
+            ResourceLocation.withDefaultNamespace("needs_wootz_steel_tool")
+    );
+
+    // Steel
+    public static final TagKey<Block> INCORRECT_FOR_STEEL_TOOL = TagKey.create(
+            Registries.BLOCK,
+            ResourceLocation.withDefaultNamespace("incorrect_for_steel_tool")
+    );
+    public static final TagKey<Block> NEEDS_STEEL_TOOL = TagKey.create(
+            Registries.BLOCK,
+            ResourceLocation.withDefaultNamespace("needs_steel_tool")
+    );
+
     public static final TagKey<Item> HAMMERS = TagKey.create(
             Registries.ITEM,
             ResourceLocation.fromNamespaceAndPath(ToolProgressionOverhaul.MODID, "hammers")

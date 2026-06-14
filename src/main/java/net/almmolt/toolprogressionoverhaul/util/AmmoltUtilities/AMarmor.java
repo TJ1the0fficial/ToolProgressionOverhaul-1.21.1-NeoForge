@@ -45,10 +45,10 @@ public class AMarmor {
         return ModItems.ARMOR_MATERIALS.register(id, () -> new ArmorMaterial(
                 // Determines the defense value of this AMarmor material, depending on what AMarmor piece it is.
                 Util.make(new EnumMap<>(ArmorItem.Type.class), map -> {
-                    map.put(ArmorItem.Type.BOOTS, helmetDefenseValue);
-                    map.put(ArmorItem.Type.LEGGINGS, chestplateDefenseValue);
-                    map.put(ArmorItem.Type.CHESTPLATE, leggingsDefenseValue);
-                    map.put(ArmorItem.Type.HELMET, bootsDefenseValue);
+                    map.put(ArmorItem.Type.BOOTS, bootsDefenseValue);
+                    map.put(ArmorItem.Type.LEGGINGS, leggingsDefenseValue);
+                    map.put(ArmorItem.Type.CHESTPLATE, chestplateDefenseValue);
+                    map.put(ArmorItem.Type.HELMET, helmetDefenseValue);
                     map.put(ArmorItem.Type.BODY, bodyDefenseValue);
                 }),
                 // Determines the enchantability of the tier. This represents how good the enchantments on this AMarmor will be.
@@ -82,6 +82,56 @@ public class AMarmor {
         ));
     }
 
+    public static Holder<ArmorMaterial> registerArmorMaterial(
+            String id,DeferredItem<Item> material,int enchantibility,
+            int helmetDefenseValue,
+            int chestplateDefenseValue,
+            int leggingsDefenseValue,
+            int bootsDefenseValue,
+            int bodyDefenseValue,
+            int toughnessValue,
+            float knockBackResistanceValue
+    ) {
+        return ModItems.ARMOR_MATERIALS.register(id, () -> new ArmorMaterial(
+                // Determines the defense value of this AMarmor material, depending on what AMarmor piece it is.
+                Util.make(new EnumMap<>(ArmorItem.Type.class), map -> {
+                    map.put(ArmorItem.Type.BOOTS, bootsDefenseValue);
+                    map.put(ArmorItem.Type.LEGGINGS, leggingsDefenseValue);
+                    map.put(ArmorItem.Type.CHESTPLATE, chestplateDefenseValue);
+                    map.put(ArmorItem.Type.HELMET, helmetDefenseValue);
+                    map.put(ArmorItem.Type.BODY, bodyDefenseValue);
+                }),
+                // Determines the enchantability of the tier. This represents how good the enchantments on this AMarmor will be.
+                // Gold uses 25, we put copper slightly below that.
+                enchantibility,
+                // Determines the sound played when equipping this AMarmor.
+                // This is wrapped with a Holder.
+                SoundEvents.ARMOR_EQUIP_GENERIC,
+                // Determines the repair item for this AMarmor.
+                () -> Ingredient.of(material),
+                // Determines the texture locations of the AMarmor to apply when rendering
+                // This can also be specified by overriding 'IItemExtension#getArmorTexture' on your item if the AMarmor texture needs to be more dynamic
+                List.of(
+                        // Creates a new AMarmor texture that will be located at:
+                        // - 'assets/mod_id/textures/models/AMarmor/copper_layer_1.png' for the outer texture
+                        // - 'assets/mod_id/textures/models/AMarmor/copper_layer_2.png' for the inner texture (only legs)
+                        new ArmorMaterial.Layer(
+                                ResourceLocation.fromNamespaceAndPath(ToolProgressionOverhaul.MODID, id)
+                        )
+                ),
+                // Returns the toughness value of the AMarmor. The toughness value is an additional value included in
+                // damage calculation, for more information, refer to the Minecraft Wiki's article on AMarmor mechanics:
+                // https://minecraft.wiki/w/Armor#Armor_toughness
+                // Only diamond and netherite have values greater than 0 here, so we just return 0.
+                toughnessValue,
+                // Returns the knockback resistance value of the AMarmor. While wearing this AMarmor, the player is
+                // immune to knockback to some degree. If the player has a total knockback resistance value of 1 or greater
+                // from all AMarmor pieces combined, they will not take any knockback at all.
+                // Only netherite has values greater than 0 here, so we just return 0.
+                knockBackResistanceValue
+        ));
+    }
+
     public static ArmorSet registerArmor(String tierId, String tierDisplayName, int durabilityFactor, Holder<ArmorMaterial> armorMaterialHolder) {
         DeferredItem<ArmorItem> HELMET = ModItems.ITEMS.register(
                 tierId+"_helmet",
@@ -97,7 +147,7 @@ public class AMarmor {
                 () -> new ArmorItem(
                         armorMaterialHolder,
                         ArmorItem.Type.CHESTPLATE,
-                        new Item.Properties().durability(ArmorItem.Type.CHESTPLATE.getDurability(15))
+                        new Item.Properties().durability(ArmorItem.Type.CHESTPLATE.getDurability(durabilityFactor))
                 )
         );
 
@@ -106,7 +156,7 @@ public class AMarmor {
                 () -> new ArmorItem(
                         armorMaterialHolder,
                         ArmorItem.Type.LEGGINGS,
-                        new Item.Properties().durability(ArmorItem.Type.LEGGINGS.getDurability(15))
+                        new Item.Properties().durability(ArmorItem.Type.LEGGINGS.getDurability(durabilityFactor))
                 )
         );
 
@@ -115,7 +165,7 @@ public class AMarmor {
                 () -> new ArmorItem(
                         armorMaterialHolder,
                         ArmorItem.Type.BOOTS,
-                        new Item.Properties().durability(ArmorItem.Type.BOOTS.getDurability(15))
+                        new Item.Properties().durability(ArmorItem.Type.BOOTS.getDurability(durabilityFactor))
                 )
         );
 

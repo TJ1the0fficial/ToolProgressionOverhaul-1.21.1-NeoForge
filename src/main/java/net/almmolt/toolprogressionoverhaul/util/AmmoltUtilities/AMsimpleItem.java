@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 
 public class AMsimpleItem {
     public static final HashMap<Supplier<Item>, String> registeredItems = new HashMap<>();
-    public static final HashMap<Supplier<Item>, String> registeredWheels = new HashMap<>();
+    public static final HashMap<crushingWheel, String> registeredWheels = new HashMap<>();
     public static final HashMap<Supplier<Item>, String> registeredDusts = new HashMap<>();
 
     public static DeferredItem<Item> registerItem(String id, String displayName) {
@@ -22,12 +22,23 @@ public class AMsimpleItem {
         return ITEM;
     }
 
-    public static DeferredItem<Item> registerWheel(String id, String displayName) {
+    public record crushingWheel(Supplier<Item> item, String id, String displayName, int tier) {
+        public static int getTierByItem(Item item) {
+            for (crushingWheel wheel : registeredWheels.keySet()) {
+                if (AMrecipe.itemId(wheel.item().get()).equals(AMrecipe.itemId(item))) {
+                    return wheel.tier();
+                }
+            }
+            return 1;
+        }
+    }
+
+    public static DeferredItem<Item> registerWheel(String id, String displayName, int tier) {
         DeferredItem<Item> ITEM = ModItems.ITEMS.register(
                 id, () -> new Item(new Item.Properties())
         );
         registeredItems.put(ITEM, displayName);
-        registeredWheels.put(ITEM, displayName);
+        registeredWheels.put(new crushingWheel(ITEM,id,displayName,tier), displayName);
         return ITEM;
     }
 

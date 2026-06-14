@@ -5,6 +5,7 @@ import net.almmolt.toolprogressionoverhaul.block.ModBlocks;
 import net.almmolt.toolprogressionoverhaul.block.custom.alloyingsmelter.AlloyingRecipeBuilder;
 import net.almmolt.toolprogressionoverhaul.block.custom.crusher.CrushingRecipeBuilder;
 import net.almmolt.toolprogressionoverhaul.item.ModItems;
+import net.almmolt.toolprogressionoverhaul.item.grades.*;
 import net.almmolt.toolprogressionoverhaul.tag.ModTags;
 import net.almmolt.toolprogressionoverhaul.util.AmmoltUtilities.AMarmor;
 import net.almmolt.toolprogressionoverhaul.util.AmmoltUtilities.AMrecipe;
@@ -46,43 +47,59 @@ public class ModRecipeProvider extends RecipeProvider {
                 .unlockedBy("tin_ingot", has(ModItems.TIN_DUST.get()))
                 .save(output, ResourceLocation.fromNamespaceAndPath(ToolProgressionOverhaul.MODID, "bronze_ingot_from_alloying"));
 
-        // Raw Tin
-        craftingRecipe_smeltAndBlast(ModItems.RAW_TIN.get(),ModItems.TIN_INGOT.get(),output);
-
         // Smelt/Blast from blocks
-        craftingRecipe_smeltAndBlast(ModBlocks.TIN_ORE.blockItem().get(), ModItems.TIN_INGOT.get(),output);
-        craftingRecipe_smeltAndBlast(ModBlocks.DEEPSLATE_TIN_ORE.blockItem().get(), ModItems.TIN_INGOT.get(),output);
-        craftingRecipe_smeltAndBlast(ModBlocks.RAW_TIN_BLOCK.blockItem().get(), ModBlocks.TIN_BLOCK.blockItem().get(),output);
-        craftingRecipe_smeltAndBlast(ModBlocks.RAW_NICKEL_BLOCK.blockItem().get(), ModBlocks.NICKEL_BLOCK.blockItem().get(),output);
-        craftingRecipe_smeltAndBlast(ModBlocks.RAW_SILVER_BLOCK.blockItem().get(), ModBlocks.SILVER_BLOCK.blockItem().get(),output);
-        craftingRecipe_smeltAndBlast(ModBlocks.SILVER_ORE.blockItem().get(), ModItems.SILVER_INGOT.get(),output);
-        craftingRecipe_smeltAndBlast(ModBlocks.DEEPSLATE_SILVER_ORE.blockItem().get(), ModItems.SILVER_INGOT.get(),output);
-        craftingRecipe_smeltAndBlast(ModBlocks.NICKEL_ORE.blockItem().get(), ModItems.NICKEL_INGOT.get(),output);
-        craftingRecipe_smeltAndBlast(ModBlocks.DEEPSLATE_NICKEL_ORE.blockItem().get(), ModItems.NICKEL_INGOT.get(),output);
+        smeltAndBlast(ModBlocks.TIN_ORE.blockItem().get(), ModItems.TIN_INGOT.get(),output);
+        smeltAndBlast(ModBlocks.DEEPSLATE_TIN_ORE.blockItem().get(), ModItems.TIN_INGOT.get(),output);
+        smeltAndBlast(ModBlocks.RAW_TIN_BLOCK.blockItem().get(), ModBlocks.TIN_BLOCK.blockItem().get(),output);
+        smeltAndBlast(ModBlocks.RAW_NICKEL_BLOCK.blockItem().get(), ModBlocks.NICKEL_BLOCK.blockItem().get(),output);
+        smeltAndBlast(ModBlocks.RAW_SILVER_BLOCK.blockItem().get(), ModBlocks.SILVER_BLOCK.blockItem().get(),output);
+        smeltAndBlast(ModBlocks.SILVER_ORE.blockItem().get(), ModItems.SILVER_INGOT.get(),output);
+        smeltAndBlast(ModBlocks.DEEPSLATE_SILVER_ORE.blockItem().get(), ModItems.SILVER_INGOT.get(),output);
+        smeltAndBlast(ModBlocks.NICKEL_ORE.blockItem().get(), ModItems.NICKEL_INGOT.get(),output);
+        smeltAndBlast(ModBlocks.DEEPSLATE_NICKEL_ORE.blockItem().get(), ModItems.NICKEL_INGOT.get(),output);
+        smeltAndBlast(ModBlocks.ZINC_ORE.blockItem().get(), ModItems.ZINC_INGOT.get(),output);
+        smeltAndBlast(ModBlocks.DEEPSLATE_ZINC_ORE.blockItem().get(), ModItems.ZINC_INGOT.get(),output);
+        smeltAndBlast(ModBlocks.RAW_ZINC_BLOCK.blockItem().get(), ModBlocks.ZINC_BLOCK.blockItem().get(),output);
 
         // Bronze Tools / Armor
-        crafingRecipe_Tools(ModItems.BRONZE_TOOLS,ModItems.BRONZE_INGOT.get(),output);
-        craftingRecipe_Armor(ModItems.BRONZE_ARMOR,ModItems.BRONZE_INGOT.get(),output);
+        crafingRecipe_Tools(Bronze.BRONZE_TOOLS,ModItems.BRONZE_INGOT.get(),output);
+        Armor(Bronze.BRONZE_ARMOR,ModItems.BRONZE_INGOT.get(),output);
         //
         // Silver Tools / Armor
-        crafingRecipe_Tools(ModItems.SILVER_TOOLS,ModItems.SILVER_INGOT.get(),output);
-        craftingRecipe_Armor(ModItems.SILVER_ARMOR,ModItems.SILVER_INGOT.get(),output);
+        crafingRecipe_Tools(Silver.SILVER_TOOLS,ModItems.SILVER_INGOT.get(),output);
+        Armor(Silver.SILVER_ARMOR,ModItems.SILVER_INGOT.get(),output);
         //
         // Invar Tools / Armor
-        crafingRecipe_Tools(ModItems.INVAR_TOOLS,ModItems.INVAR_INGOT.get(),output);
-        craftingRecipe_Armor(ModItems.INVAR_ARMOR,ModItems.INVAR_INGOT.get(),output);
+        crafingRecipe_Tools(Invar.INVAR_TOOLS,ModItems.INVAR_INGOT.get(),output);
+        Armor(Invar.INVAR_ARMOR,ModItems.INVAR_INGOT.get(),output);
+        //
+        // Galvanized Iron Tools / Armor
+        crafingRecipe_Tools(GalvanizedIron.GALVANIZED_IRON_TOOLS,ModItems.GALVANIZED_IRON_INGOT.get(),output);
+        Armor(GalvanizedIron.GALVANIZED_IRON_ARMOR,ModItems.GALVANIZED_IRON_INGOT.get(),output);
+        //
+        // Wootz Steel Tools / Armor
+        crafingRecipe_Tools(WootzSteel.WOOTZ_STEEL_TOOLS,ModItems.WOOTZ_STEEL_INGOT.get(),output);
+        Armor(WootzSteel.WOOTZ_STEEL_ARMOR,ModItems.WOOTZ_STEEL_INGOT.get(),output);
+        //
+        // Steel Tools / Armor
+        crafingRecipe_Tools(Steel.STEEL_TOOLS,ModItems.STEEL_INGOT.get(),output);
+        Armor(Steel.STEEL_ARMOR,ModItems.STEEL_INGOT.get(),output);
         //
 
         // material to blocks
-        craftingRecipe_itemAndBlock(ModItems.TIN_INGOT.get(),ModBlocks.TIN_BLOCK.block().get(),output);
-        craftingRecipe_itemAndBlock(ModItems.BRONZE_INGOT.get(),ModBlocks.BRONZE_BLOCK.block().get(),output);
-        craftingRecipe_itemAndBlock(ModItems.NICKEL_INGOT.get(),ModBlocks.NICKEL_BLOCK.block().get(),output);
-        craftingRecipe_itemAndBlock(ModItems.SILVER_INGOT.get(),ModBlocks.SILVER_BLOCK.block().get(),output);
-        craftingRecipe_itemAndBlock(ModItems.INVAR_INGOT.get(),ModBlocks.INVAR_BLOCK.block().get(),output);
+        itemAndBlock(ModItems.TIN_INGOT.get(),ModBlocks.TIN_BLOCK.block().get(),output);
+        itemAndBlock(ModItems.BRONZE_INGOT.get(),ModBlocks.BRONZE_BLOCK.block().get(),output);
+        itemAndBlock(ModItems.NICKEL_INGOT.get(),ModBlocks.NICKEL_BLOCK.block().get(),output);
+        itemAndBlock(ModItems.SILVER_INGOT.get(),ModBlocks.SILVER_BLOCK.block().get(),output);
+        itemAndBlock(ModItems.INVAR_INGOT.get(),ModBlocks.INVAR_BLOCK.block().get(),output);
+        itemAndBlock(ModItems.ZINC_INGOT.get(),ModBlocks.ZINC_BLOCK.block().get(),output);
+        itemAndBlock(ModItems.GALVANIZED_IRON_INGOT.get(),ModBlocks.GALVANIZED_IRON_BLOCK.block().get(),output);
+        itemAndBlock(ModItems.WOOTZ_STEEL_INGOT.get(),ModBlocks.WOOTZ_STEEL_BLOCK.block().get(),output);
 
-        craftingRecipe_itemAndBlock(ModItems.RAW_TIN.get(),ModBlocks.RAW_TIN_BLOCK.block().get(),output);
-        craftingRecipe_itemAndBlock(ModItems.RAW_NICKEL.get(),ModBlocks.RAW_NICKEL_BLOCK.block().get(),output);
-        craftingRecipe_itemAndBlock(ModItems.RAW_SILVER.get(),ModBlocks.RAW_SILVER_BLOCK.block().get(),output);
+        itemAndBlock(ModItems.RAW_TIN.get(),ModBlocks.RAW_TIN_BLOCK.block().get(),output);
+        itemAndBlock(ModItems.RAW_NICKEL.get(),ModBlocks.RAW_NICKEL_BLOCK.block().get(),output);
+        itemAndBlock(ModItems.RAW_SILVER.get(),ModBlocks.RAW_SILVER_BLOCK.block().get(),output);
+        itemAndBlock(ModItems.RAW_ZINC.get(),ModBlocks.RAW_ZINC_BLOCK.block().get(),output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.ALLOYING_SMELTER_ASITEM.get())
                 .pattern("TBT")
@@ -97,37 +114,54 @@ public class ModRecipeProvider extends RecipeProvider {
                 .save(output);
 
         // to dust
-        craftingRecipe_toDust(ModItems.TIN_DUST, new HashMap<>(Map.of(
+        toDust(ModItems.TIN_DUST, new HashMap<>(Map.of(
                 ModItems.RAW_TIN.get(),2,
                 ModItems.TIN_INGOT.get(),1
         )),output);
 
-        craftingRecipe_toDust(ModItems.BRONZE_DUST, new HashMap<>(Map.of(
+        toDust(ModItems.BRONZE_DUST, new HashMap<>(Map.of(
                 ModItems.BRONZE_INGOT.get(),1
         )),output);
 
-        craftingRecipe_toDust(ModItems.IRON_DUST, new HashMap<>(Map.of(
+        toDust(ModItems.IRON_DUST, new HashMap<>(Map.of(
                 Items.RAW_IRON,2,
                 Items.IRON_INGOT,1
         )),output);
 
-        craftingRecipe_toDust(ModItems.COPPER_DUST, new HashMap<>(Map.of(
+        toDust(ModItems.COPPER_DUST, new HashMap<>(Map.of(
                 Items.RAW_COPPER,2,
                 Items.COPPER_INGOT,1
         )),output);
 
-        craftingRecipe_toDust(ModItems.NICKEL_DUST, new HashMap<>(Map.of(
+        toDust(ModItems.NICKEL_DUST, new HashMap<>(Map.of(
                 ModItems.RAW_NICKEL.get(),2,
                 ModItems.NICKEL_INGOT.get(),1
         )),output);
 
-        craftingRecipe_toDust(ModItems.SILVER_DUST, new HashMap<>(Map.of(
+        toDust(ModItems.SILVER_DUST, new HashMap<>(Map.of(
                 ModItems.RAW_SILVER.get(),2,
                 ModItems.SILVER_INGOT.get(),1
         )),output);
 
-        craftingRecipe_toDust(ModItems.INVAR_DUST, new HashMap<>(Map.of(
+        toDust(ModItems.INVAR_DUST, new HashMap<>(Map.of(
                 ModItems.INVAR_INGOT.get(),1
+        )),output);
+
+        toDust(ModItems.ZINC_DUST, new HashMap<>(Map.of(
+                ModItems.RAW_ZINC.get(),2,
+                ModItems.ZINC_INGOT.get(),1
+        )),output);
+
+        toDust(ModItems.GALVANIZED_IRON_DUST, new HashMap<>(Map.of(
+                ModItems.GALVANIZED_IRON_INGOT.get(),1
+        )),output);
+
+        toDust(ModItems.WOOTZ_STEEL_DUST, new HashMap<>(Map.of(
+                ModItems.WOOTZ_STEEL_INGOT.get(),1
+        )),output);
+
+        toDust(ModItems.STEEL_DUST, new HashMap<>(Map.of(
+                ModItems.STEEL_INGOT.get(),1
         )),output);
         //
 
@@ -211,26 +245,25 @@ public class ModRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_iron_dust",has(ModItems.IRON_DUST.get()))
                 .save(output,ResourceLocation.fromNamespaceAndPath(ToolProgressionOverhaul.MODID,"invar_ingot_alloying_from_dust"));
 
-        craftingRecipe_smeltAndBlast(ModItems.RAW_NICKEL.get(),ModItems.NICKEL_INGOT.get(),output);
-        craftingRecipe_smeltAndBlast(ModItems.RAW_SILVER.get(),ModItems.SILVER_INGOT.get(),output);
-        craftingRecipe_smeltAndBlast(Blocks.RAW_COPPER_BLOCK.asItem(),Blocks.COPPER_BLOCK.asItem(),output);
-        craftingRecipe_smeltAndBlast(Blocks.RAW_IRON_BLOCK.asItem(),Blocks.IRON_BLOCK.asItem(),output);
-        craftingRecipe_smeltAndBlast(Blocks.RAW_GOLD_BLOCK.asItem(),Blocks.GOLD_BLOCK.asItem(),output);
+        smeltAndBlast(ModItems.RAW_TIN.get(),ModItems.TIN_INGOT.get(),output);
+        smeltAndBlast(ModItems.RAW_NICKEL.get(),ModItems.NICKEL_INGOT.get(),output);
+        smeltAndBlast(ModItems.RAW_SILVER.get(),ModItems.SILVER_INGOT.get(),output);
+        smeltAndBlast(Blocks.RAW_COPPER_BLOCK.asItem(),Blocks.COPPER_BLOCK.asItem(),output);
+        smeltAndBlast(Blocks.RAW_IRON_BLOCK.asItem(),Blocks.IRON_BLOCK.asItem(),output);
+        smeltAndBlast(Blocks.RAW_GOLD_BLOCK.asItem(),Blocks.GOLD_BLOCK.asItem(),output);
 
         // dust smelt+blast recipes
-        craftingRecipe_smeltAndBlast(ModItems.IRON_DUST.get(),Items.IRON_INGOT,output);
-
-        craftingRecipe_smeltAndBlast(ModItems.TIN_DUST.get(),ModItems.TIN_INGOT.get(),output);
-
-        craftingRecipe_smeltAndBlast(ModItems.COPPER_DUST.get(),Items.COPPER_INGOT,output);
-
-        craftingRecipe_smeltAndBlast(ModItems.BRONZE_DUST.get(),ModItems.BRONZE_INGOT.get(),output);
-
-        craftingRecipe_smeltAndBlast(ModItems.SILVER_DUST.get(),ModItems.SILVER_INGOT.get(),output);
-
-        craftingRecipe_smeltAndBlast(ModItems.NICKEL_DUST.get(),ModItems.NICKEL_INGOT.get(),output);
-
-        craftingRecipe_smeltAndBlast(ModItems.INVAR_DUST.get(),ModItems.INVAR_INGOT.get(),output);
+        smeltAndBlast(ModItems.IRON_DUST.get(),Items.IRON_INGOT,output);
+        smeltAndBlast(ModItems.TIN_DUST.get(),ModItems.TIN_INGOT.get(),output);
+        smeltAndBlast(ModItems.COPPER_DUST.get(),Items.COPPER_INGOT,output);
+        smeltAndBlast(ModItems.BRONZE_DUST.get(),ModItems.BRONZE_INGOT.get(),output);
+        smeltAndBlast(ModItems.SILVER_DUST.get(),ModItems.SILVER_INGOT.get(),output);
+        smeltAndBlast(ModItems.NICKEL_DUST.get(),ModItems.NICKEL_INGOT.get(),output);
+        smeltAndBlast(ModItems.INVAR_DUST.get(),ModItems.INVAR_INGOT.get(),output);
+        smeltAndBlast(ModItems.ZINC_DUST.get(),ModItems.ZINC_INGOT.get(),output);
+        smeltAndBlast(ModItems.GALVANIZED_IRON_DUST.get(),ModItems.GALVANIZED_IRON_INGOT.get(),output);
+        smeltAndBlast(ModItems.WOOTZ_STEEL_DUST.get(),ModItems.WOOTZ_STEEL_INGOT.get(),output);
+        smeltAndBlast(ModItems.STEEL_DUST.get(),ModItems.STEEL_INGOT.get(),output);
 
         SimpleCookingRecipeBuilder.blasting(
                         Ingredient.of(ModItems.COAL_DUST),
@@ -248,8 +281,8 @@ public class ModRecipeProvider extends RecipeProvider {
                 .pattern("F  ")
                 .pattern("   ")
                 .define('F',Items.FLINT)
-                .define('S',Items.DIAMOND)
-                .unlockedBy("has_steel",has(Items.DIAMOND))
+                .define('S',ModItems.STEEL_INGOT)
+                .unlockedBy("has_steel",has(ModItems.STEEL_INGOT))
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.IRON_CRUSHING_WHEEL)
@@ -262,14 +295,14 @@ public class ModRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_invar",has(ModItems.INVAR_INGOT))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.SILVER_CRUSHING_WHEEL)
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.WOOTZ_STEEL_CRUSHING_WHEEL)
                 .pattern(" IB")
                 .pattern("INI")
                 .pattern("BI ")
-                .define('B',ModBlocks.SILVER_BLOCK.blockItem())
-                .define('I',ModItems.SILVER_INGOT)
-                .define('N',ModItems.INVAR_INGOT)
-                .unlockedBy("has_invar",has(ModItems.INVAR_INGOT))
+                .define('B',ModBlocks.WOOTZ_STEEL_BLOCK.blockItem())
+                .define('I',ModItems.WOOTZ_STEEL_INGOT)
+                .define('N',ModItems.GALVANIZED_IRON_INGOT)
+                .unlockedBy("has_galvanized_iron",has(ModItems.GALVANIZED_IRON_INGOT))
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModBlocks.CRUSHER_ASITEM)
@@ -304,11 +337,41 @@ public class ModRecipeProvider extends RecipeProvider {
         AMrecipe.crushWithAll(new HashMap<>(Map.of(Items.RAW_IRON,2,Items.IRON_INGOT,1)),ModItems.IRON_DUST.get(),200,output);
         AMrecipe.crushWithAll(new HashMap<>(Map.of(Items.RAW_COPPER,2,Items.COPPER_INGOT,1)),ModItems.COPPER_DUST.get(),200,output);
         AMrecipe.crushWithAll(new HashMap<>(Map.of(Items.COAL,2,Items.CHARCOAL,1)),ModItems.COAL_DUST.get(),200,output);
-        AMrecipe.crushWithAll(new HashMap<>(Map.of(Items.RAW_COPPER,2,Items.COPPER_INGOT,1)),ModItems.TIN_DUST.get(),200,output);
+        AMrecipe.crushWithAll(new HashMap<>(Map.of(ModItems.RAW_TIN.get(),2,ModItems.TIN_INGOT.get(),1)),ModItems.TIN_DUST.get(),200,output);
         AMrecipe.crushWithAll(ModItems.BRONZE_INGOT.get(),ModItems.BRONZE_DUST.get(),10,output);
         AMrecipe.crushWithAll(new HashMap<>(Map.of(ModItems.RAW_NICKEL.get(),2,ModItems.NICKEL_INGOT.get(),1)),ModItems.NICKEL_DUST.get(),200,output);
         AMrecipe.crushWithAll(new HashMap<>(Map.of(ModItems.RAW_SILVER.get(),2,ModItems.SILVER_INGOT.get(),1)),ModItems.SILVER_DUST.get(),200,output);
         AMrecipe.crushWithAll(ModItems.INVAR_INGOT.get(),ModItems.INVAR_DUST.get(),200,output);
+        AMrecipe.crushWithAll(new HashMap<>(Map.of(ModItems.RAW_ZINC.get(),2,ModItems.ZINC_INGOT.get(),1)),ModItems.ZINC_DUST.get(),200,output);
+        AMrecipe.crushWithAll(Items.COBBLESTONE,Items.GRAVEL,200,output);
+        AMrecipe.crushWithAll(Items.GRAVEL,Items.DIRT,200,output);
+        AMrecipe.crushWithAll(Items.DIRT,Items.SAND,200,output);
+        AMrecipe.crushWithAll(Items.SAND,ModItems.SAND_FLUX_DUST.get(),200,output);
+        AMrecipe.crushWithAll(Items.BONE_MEAL,ModItems.BONE_FLUX_DUST.get(),200,output);
+        AMrecipe.crushWithAll(Items.CALCITE,ModItems.CALCITE_FLUX_DUST.get(),200,output);
+        AMrecipe.crushWith(2,ModItems.STEEL_INGOT.get(), ModItems.STEEL_DUST.get(), 250, output);
+        //
+
+        // with fluxes
+        AMrecipe.alloyingWithFluxes(
+                ModItems.GALVANIZED_IRON_INGOT.asItem(), 1,
+                ModItems.ZINC_DUST.asItem(), 1,
+                ModItems.IRON_DUST.asItem(), 1,
+                output
+        );
+
+        AMrecipe.alloyingWithFluxesAndCoke(
+                ModItems.WOOTZ_STEEL_INGOT.asItem(), 1,
+                ModItems.IRON_DUST.asItem(), 1,
+                output
+        );
+
+        AMrecipe.alloyingWithFluxes(
+                ModItems.STEEL_INGOT.asItem(), 1,
+                ModItems.WOOTZ_STEEL_DUST.asItem(), 1,
+                ModItems.IRON_DUST.asItem(), 1,
+                output
+        );
         //
     }
 }

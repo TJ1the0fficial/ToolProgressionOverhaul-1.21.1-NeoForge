@@ -102,6 +102,34 @@ public class ModAdvancementProvider extends AdvancementProvider {
                     ModItems.IRON_CRUSHING_WHEEL.get(),
                     invarIngot
             );
+
+            AdvancementHolder upgradeWheel = createTask(
+                    saver, existingFileHelper,
+                    "upgrade_wheel",
+                    ModItems.WOOTZ_STEEL_CRUSHING_WHEEL.asItem(),
+                    crusherWheels
+            );
+
+            AdvancementHolder galvanizedIron = createTask(
+                    saver, existingFileHelper,
+                    "galvanized_iron",
+                    ModItems.GALVANIZED_IRON_INGOT.asItem(),
+                    crusher
+            );
+
+            AdvancementHolder wootzSteel = createTask(
+                    saver, existingFileHelper,
+                    "wootz_steel",
+                    ModItems.WOOTZ_STEEL_INGOT.asItem(),
+                    galvanizedIron
+            );
+
+            AdvancementHolder steel = createTask(
+                    saver, existingFileHelper,
+                    "steel",
+                    ModItems.STEEL_INGOT.asItem(),
+                    wootzSteel
+            );
         }
     }
 }

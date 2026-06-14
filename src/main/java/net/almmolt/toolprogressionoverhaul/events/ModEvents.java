@@ -4,7 +4,11 @@ import net.almmolt.toolprogressionoverhaul.ToolProgressionOverhaul;
 import net.almmolt.toolprogressionoverhaul.block.ModBlockEntities;
 import net.almmolt.toolprogressionoverhaul.block.custom.crusher.CrusherBlockEntity;
 import net.almmolt.toolprogressionoverhaul.item.ModItems;
+import net.almmolt.toolprogressionoverhaul.item.grades.GalvanizedIron;
+import net.almmolt.toolprogressionoverhaul.item.grades.Silver;
+import net.almmolt.toolprogressionoverhaul.item.grades.WootzSteel;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -16,6 +20,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.damagesource.DamageContainer;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+import net.neoforged.neoforge.event.entity.player.CriticalHitEvent;
 import net.neoforged.neoforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.neoforged.neoforge.items.wrapper.RangedWrapper;
 
@@ -68,10 +73,10 @@ public class ModEvents {
                 int silverPieces = 0;
                 for (ItemStack armorPiece : armor) {
                     if (
-                            armorPiece.is(ModItems.SILVER_HELMET.get()) ||
-                                    armorPiece.is(ModItems.SILVER_CHESTPLATE.get()) ||
-                                    armorPiece.is(ModItems.SILVER_LEGGINGS.get()) ||
-                                    armorPiece.is(ModItems.SILVER_BOOTS.get())
+                            armorPiece.is(Silver.SILVER_HELMET.get()) ||
+                                    armorPiece.is(Silver.SILVER_CHESTPLATE.get()) ||
+                                    armorPiece.is(Silver.SILVER_LEGGINGS.get()) ||
+                                    armorPiece.is(Silver.SILVER_BOOTS.get())
                     ) silverPieces++;
                 }
 
@@ -91,6 +96,39 @@ public class ModEvents {
 
                     event.setAmount(event.getAmount() * reductionMultiplier);
                 }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onCriticalHit(CriticalHitEvent event) { // AI code
+        // 1. Get the player
+        Player player = event.getEntity();
+
+        // 2. Check if they are holding a Wootz Steel item
+        // (You can use a Tag here if you made one for Wootz tools)
+        ItemStack stack = player.getMainHandItem();
+
+        if (
+                stack.is(WootzSteel.WOOTZ_STEEL_SWORD.get()) ||
+                stack.is(WootzSteel.WOOTZ_STEEL_SHOVEL.get()) ||
+                stack.is(WootzSteel.WOOTZ_STEEL_PICKAXE.get()) ||
+                stack.is(WootzSteel.WOOTZ_STEEL_AXE.get()) ||
+                stack.is(WootzSteel.WOOTZ_STEEL_HOE.get()) ||
+                stack.is(WootzSteel.WOOTZ_STEEL_HAMMER.get())
+        ) {
+
+            // 3. Check if the hit is ALREADY a critical hit
+            // Minecraft handles the "is falling" logic automatically before this event
+            if (event.isVanillaCritical()) {
+
+                // 4. Increase the multiplier
+                // Vanilla critical hits deal 1.5x damage.
+                // To add +20%, we set the multiplier to 1.8f (1.5 * 1.2 = 1.8)
+                event.setDamageMultiplier(2.5f);
+
+                // Optional: Add a cool "Wootz" particle or sound
+                 player.level().addParticle(ParticleTypes.ENCHANTED_HIT, event.getTarget().getX(), event.getTarget().getY(), event.getTarget().getZ(), 0, 0, 0);
             }
         }
     }

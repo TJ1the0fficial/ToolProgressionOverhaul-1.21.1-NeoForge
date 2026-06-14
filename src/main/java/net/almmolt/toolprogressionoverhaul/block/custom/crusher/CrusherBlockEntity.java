@@ -3,6 +3,7 @@ package net.almmolt.toolprogressionoverhaul.block.custom.crusher;
 import net.almmolt.toolprogressionoverhaul.block.ModBlockEntities;
 import net.almmolt.toolprogressionoverhaul.recipe.ModRecipes;
 import net.almmolt.toolprogressionoverhaul.tag.ModTags;
+import net.almmolt.toolprogressionoverhaul.util.AmmoltUtilities.AMsimpleItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -33,8 +34,8 @@ public class CrusherBlockEntity extends BlockEntity {
         super(ModBlockEntities.CRUSHER_BLOCK_ENTITY.get(), pos, blockState);
     }
 
-    int progress;
-    int maxProgress;
+    public int progress;
+    public int maxProgress;
     boolean lastActiveState;
 
     // 1. A simple inventory that doesn't AMblock the machine's own code
@@ -156,6 +157,7 @@ public class CrusherBlockEntity extends BlockEntity {
         if (recipe.isPresent()) {
             CrushingRecipe match = recipe.get().value();
             blockEntity.maxProgress = match.getDuration();
+            blockEntity.maxProgress /= AMsimpleItem.crushingWheel.getTierByItem(wheel.getItem());
             ItemStack result = match.assemble(recipeInput, level.registryAccess());
 
             // Check if Slot 2 (Output) can fit the result

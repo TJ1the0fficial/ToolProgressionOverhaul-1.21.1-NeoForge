@@ -30,6 +30,14 @@ public class ModBlocks {
     public static AMblock.BlockSet SILVER_BLOCK = registerBlock("silver_block","Block Of Silver");
     public static AMblock.BlockSet RAW_SILVER_BLOCK = registerBlock("raw_silver_block","Block Of Raw Silver");
     public static AMblock.BlockSet INVAR_BLOCK = registerBlock("invar_block","Block Of Invar");
+    public static AMblock.BlockSet ZINC_ORE = registerBlock("zinc_ore","Ore of Zinc");
+    public static AMblock.BlockSet DEEPSLATE_ZINC_ORE = registerBlock("deepslate_zinc_ore","Deepslate Ore of Zinc");
+    public static AMblock.BlockSet ZINC_BLOCK = registerBlock("zinc_block","Block of Zinc");
+    public static AMblock.BlockSet RAW_ZINC_BLOCK = registerBlock("raw_zinc_block","Block Of Raw Zinc");
+    public static AMblock.BlockSet GALVANIZED_IRON_BLOCK = registerBlock("galvanized_iron_block","Block of Galvanized Iron");
+    public static AMblock.BlockSet WOOTZ_STEEL_BLOCK = registerBlock("wootz_steel_block","Block of Wootz Steel");
+
+
 
     // ModBlockEntites
     public static DeferredBlock<AlloyingSmelterEntityBlock> ALLOYING_SMELTER = BLOCKS.register(

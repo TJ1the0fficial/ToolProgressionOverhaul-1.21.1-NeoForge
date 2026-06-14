@@ -1,9 +1,13 @@
 package net.almmolt.toolprogressionoverhaul.item.custom;
 
-import net.almmolt.toolprogressionoverhaul.tag.ModTags;
+import net.almmolt.toolprogressionoverhaul.ToolProgressionOverhaul;
+import net.almmolt.toolprogressionoverhaul.util.AmmoltUtilities.AMrecipe;
+import net.almmolt.toolprogressionoverhaul.util.AmmoltUtilities.AMsimpleItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -15,7 +19,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.component.Tool;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -84,7 +87,10 @@ public class HammerItem extends DiggerItem {
 
                 area = get3x3Area(pos,getHitFace((Player) miningEntity));
 
-                for (BlockPos blockPos : area) if (!level.getBlockState(blockPos).is(Blocks.BEDROCK) && !level.getBlockState(blockPos).isEmpty()) {
+                for (BlockPos blockPos : area) if (
+                        !level.getBlockState(blockPos).is(Blocks.BEDROCK) &&
+                        !level.getBlockState(blockPos).isEmpty()
+                ) {
                     level.destroyBlock(blockPos,true,miningEntity);
                     stack.hurtAndBreak(tool.damagePerBlock(), miningEntity, EquipmentSlot.MAINHAND);
                 }

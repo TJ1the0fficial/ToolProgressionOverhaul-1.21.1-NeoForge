@@ -58,6 +58,10 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         dropSelf(ModBlocks.RAW_SILVER_BLOCK.block().get());
         dropSelf(ModBlocks.INVAR_BLOCK.block().get());
         dropSelf(ModBlocks.CRUSHER.get());
+        dropSelf(ModBlocks.ZINC_BLOCK.block().get());
+        dropSelf(ModBlocks.RAW_ZINC_BLOCK.block().get());
+        dropSelf(ModBlocks.GALVANIZED_IRON_BLOCK.block().get());
+        dropSelf(ModBlocks.WOOTZ_STEEL_BLOCK.block().get());
         add(ModBlocks.NICKEL_ORE.block().get(),
                 createCustomOreDrops(ModBlocks.NICKEL_ORE.block().get(),ModItems.RAW_NICKEL.get(),1,1));
         add(ModBlocks.DEEPSLATE_NICKEL_ORE.block().get(),
@@ -66,23 +70,26 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
                 createCustomOreDrops(ModBlocks.SILVER_ORE.block().get(),ModItems.RAW_SILVER.get(),1,1));
         add(ModBlocks.DEEPSLATE_SILVER_ORE.block().get(),
                 createCustomOreDrops(ModBlocks.DEEPSLATE_SILVER_ORE.block().get(),ModItems.RAW_SILVER.get(),1,3));
+        add(ModBlocks.ZINC_ORE.block().get(),
+                createCustomOreDrops(ModBlocks.ZINC_ORE.block().get(),ModItems.RAW_ZINC.get(),1,1));
+        add(ModBlocks.DEEPSLATE_ZINC_ORE.block().get(),
+                createCustomOreDrops(ModBlocks.DEEPSLATE_ZINC_ORE.block().get(),ModItems.RAW_ZINC.get(),2,3));
     }
 
     public LootTable.Builder createCustomOreDrops(Block block, Item item , float min, float max) {
         HolderLookup.RegistryLookup<Enchantment> registrylookup = this.registries.lookupOrThrow(Registries.ENCHANTMENT);
         return this.createSilkTouchDispatchTable(
                 block,
-                (LootPoolEntryContainer.Builder)
-                        this.applyExplosionDecay(
-                                block,
-                                LootItem.lootTableItem(item)
-                                        .apply(
-                                                SetItemCountFunction.setCount(
-                                                        UniformGenerator.between(min,max)))
-                                        .apply(ApplyBonusCount.addUniformBonusCount(
-                                                registrylookup.getOrThrow(Enchantments.FORTUNE))
-                                        )
-                        )
+                this.applyExplosionDecay(
+                        block,
+                        LootItem.lootTableItem(item)
+                                .apply(
+                                        SetItemCountFunction.setCount(
+                                                UniformGenerator.between(min,max)))
+                                .apply(ApplyBonusCount.addUniformBonusCount(
+                                        registrylookup.getOrThrow(Enchantments.FORTUNE))
+                                )
+                )
         );
     }
 }
